@@ -301,10 +301,10 @@ class Scene_Map
       Chroma.playAnim("chroma/Random_Keyboard.chroma", false);
     end
     # If debug mode is ON and F9 key was pressed
-    # if $debug and Input.press?(Input::F9)
+     if $debug and Input.press?(Input::F9)
     #   # Set debug calling flag
-    #   $game_temp.debug_calling = true
-    # end
+       $game_temp.debug_calling = true
+     end
     # If player is not moving
     unless $game_player.moving?
       # Run calling of each screen

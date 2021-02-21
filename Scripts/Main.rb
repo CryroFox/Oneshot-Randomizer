@@ -10,6 +10,7 @@ at_exit do
 end
 
 SCRIPTS_DIR = "Scripts/"
+$randomizer = Randomizer.new
 
 def reload_all_scripts
   IO.foreach(SCRIPTS_DIR + "_scripts.txt") do |name|
@@ -17,8 +18,15 @@ def reload_all_scripts
     next if name.empty? || name.start_with?("#") || name == "Main"
     Kernel::load SCRIPTS_DIR + name + ".rb"
   end
+  $randomizer.loadconfig
+  $randomizer.newsplash
 end
 
+def load_plugins
+  Dir["#{File.dirname(__FILE__)}/__Randomizer/Plugins/*.rb"].each {|file| Kernel::load file }
+end
+
+load_plugins
 reload_all_scripts
 begin
   $console = Graphics.fullscreen
@@ -31,11 +39,16 @@ begin
   # Prepare for transition
   Graphics.freeze
   $demo = false
+  $debug = true
   $GDC = false
   # Make scene object (title screen)
   $scene = Scene_Title.new
   Oneshot.allow_exit false
   Oneshot.exiting false
+  $randomizer.loadconfig
+  $randomizer.newsplash
+  
+  
 
 #  x = Oneshot.textinput("Foo Bar")
 #  print("#{x}")

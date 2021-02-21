@@ -98,6 +98,7 @@ def write_save(filename)
     Marshal.dump($game_oneshot, file)
     Marshal.dump($game_fasttravel, file)
     Marshal.dump($game_temp.footstep_sfx , file)
+    Marshal.dump($randomizer.Seed , file)
   end
 end
 
@@ -138,6 +139,7 @@ def load(filename)
     $game_oneshot       = Marshal.load(file)
     $game_fasttravel    = Marshal.load(file)
 	  $game_temp.footstep_sfx = Marshal.load(file)
+	  $randomizer.Seed = Marshal.load(file)
     # If magic number is different from when saving
     # (if editing was added with editor)
     if $game_system.magic_number != $data_system.magic_number

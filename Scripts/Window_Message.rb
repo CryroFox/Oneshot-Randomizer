@@ -108,6 +108,15 @@ class Window_Message < Window_Selectable
         text.gsub!("\\p", " " + $game_oneshot.player_name)
       end
       text.gsub!("\\n", "\n")
+      if !$randomizer.MessiahName.start_with?("\\")
+      text.gsub!("NIKO", $randomizer.MessiahName.to_s.upcase)
+      text.gsub!("niko", $randomizer.MessiahName.to_s.downcase)
+      text.gsub!("Niko", $randomizer.MessiahName.to_s)
+    else
+      text.gsub!("niko", $randomizer.MessiahName.to_s)
+      text.gsub!("NIKO", $randomizer.MessiahName.to_s)
+      text.gsub!("Niko", $randomizer.MessiahName.to_s)
+    end
       # Handle text-rendering escape sequences
       text.gsub!(/\\c\[([0-9]+)\]/, "\0[\\1]")
       text.gsub!("\\.", "\001")
