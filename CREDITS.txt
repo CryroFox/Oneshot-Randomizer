@@ -1,0 +1,271 @@
+﻿Credits
+=======
+
+Programming
+-----------
+
+* Eliza Velasquez
+* Michael Shirt
+
+Graphics
+--------
+
+* Nightmargin (Casey Gu)
+
+Character Design
+----------------
+
+* Nightmargin
+* Maize and George by Eliza
+
+Soundtrack
+----------
+
+* Nightmargin
+* Additional tracks by Eliza and Michael
+* Some music samples provided by the FreeSound.org users
+  Jovica, Dymewiz, hanstimm, and Freed
+
+Story
+-----
+
+* Mechanics Concept: Eliza
+* General Story and Worldbuilding: Nightmargin, Eliza
+* Writing: Nightmargin, Eliza, Michael
+
+Producer
+--------
+
+* Mark Conforti
+
+Official Testers
+----------------
+
+* Jason Black
+* Sin Aria
+* Omer Oztas
+
+日本語テスター
+-----------
+
+* SinNoAria
+* エムブレ
+* Xeksoryu
+* 蒸しパン
+* さくさんいおん
+* qatwu
+* Levin
+* temicc
+* Konro
+* 系井水縞 「Hexous」
+* Ticklate13
+* sam
+* 麻婆飯
+* おすし
+* kengo700
+
+French Testers
+--------------
+* Hilden/Tomosha
+* Ekas Wonder
+* Yassine Bouallag
+* Devin "Baconbits" Seivertson
+* Piwix
+* Duskend
+* TheFloFic
+* sam
+* Arthur Tondo
+* Zora "Rodd" Hoger
+* Nélic
+
+Portuguese Testers
+------------------
+* JunBerg
+* Marco "Ilex" Melchior
+* Davi Ciríaco Amaral
+* Arthur Armindo Tondo Silva
+* gm
+* Metolefrul-Indus ( Raphael )
+* Cristiano Oshiro (Crisovs)
+* wilson_33r
+* Jonathan Hiago Dimitrov de Bastos
+* Victor Brum dos Santos
+* Caio Ledo
+* Zora Hogake
+* Leo Anater
+* Mauricio Eishin Yoshioka
+* Lucas Miguel Glória Moreira
+* Victor Brum dos Santos
+* wonderschaser
+* NekoGlitch
+* Lumacchii
+
+Spanish Testers
+---------------
+* Edgar de jesus Enriquez R.
+* Alfredo Flores G.
+* Andres "Squeak".
+* Samuel Roca "SaRoKu"
+* Fonareng
+* Carlos "Derik" Morillo
+* Luciano Mauro Castro
+* Gustavo Siles
+* Zero Reploide "Ciro"
+* Jose M. Mosquera G.
+* Rasko
+* Carlos Morales "Darak"
+* Mariano Peranzoni
+* Oriana Heredia A.
+* Alejandra Garza
+* Plushfire5
+* Megalomaniac64
+* narmet70
+* SaltedCrust
+* Esau Garcia
+* Logan Severance
+
+Korean Testers
+--------------
+* 유민서
+* TRNCH
+* Grang
+* RoAA[Malza]
+* 유구연
+* 누미
+* asdf
+* PD판다
+* 아모건
+* usooong2478
+* Erica "Clariche" K.
+* Nimda
+* 작은롱
+* Holmani154
+* nlolicon
+* 지극히 평범한 인간
+
+Chinese Testers
+---------------
+* 狐狸少年ppp123434
+* 肯德基執行檔
+* "最愛太陽精靈"雷丘王
+* Runnan Zhao
+* 黑藻
+* Lunar
+* Alle
+
+Resources
+---------
+
+* The *OneShot* engine is a fork of [MKXP](https://github.com/Ancurio/mkxp) by
+  Ancurio and various volunteers.
+* GNU GPL v3 and Steam interoperability was made possible by
+  [steamshim](https://hg.icculus.org/icculus/steamshim/) by Ryan C. Gordon.
+* The font used for Latin text is Terminus. East-Asian text is rendered with the
+  WenQuanYi Micro Hei font. The Jenna Sue and RM Typerighter fonts are used for
+  additional graphical text. See the [licenses section](##licenses) for details.
+* FreeSound.org samples provided by the users...
+      Black Snow              conleec
+      rivernile7              jacobalcook
+      reinsamba               kantouth
+      martinimeniscus         elliottmoo
+      Adam_N                  RHumphries
+      luffy                   samararaine
+      chrisw92                grunz
+      Autistic Lucario        fins
+      Mydo1                   kklab5050
+      D W                     Kyle1Katarn
+      LG                      soundmary
+      THE_bizniss             MAJ061785
+      mmaruska                bevangoldswair
+      Trautwein               Yoyodaman234
+      pempi                   Vosvoy
+      RutgerMuller            PatrickLieberkind
+      pakasit21               MikaF
+      nodelete                neohylanmay
+      Chocktaw                steffcaffrey
+      thearxx08               blukotek
+      are16ocean              CGEffex
+      ximian                  Werra
+      ThompsonMan             crk365
+      satanicupsman           cjosephwalker
+      Illud                   ProjectsU012
+      gerainsan               metmass
+      ludvique                plasterbrain
+      noirenex                crcavol
+      Ayliffe                 lwdickens
+      speedygonzo
+* [Bfxr](http://www.bfxr.net/) was used in the generation of additional sound
+  effects.
+* Textures used on the map and the door are from
+  [wildtextures](http://www.wildtextures.com/). Additional resources were used
+  from Textures.com.
+
+Additional Thanks
+-----------------
+
+* Saniblues: testing and feedback
+* Redoplus: testing and feedback
+* Almond-Goddess: testing and feedback
+* FelixTheJudge: music feedback
+* Albatrosssoup: music feedback
+* Sauraen: music feedback
+* Stanhoff: physics consultant
+* Kalkie: cameo character
+* Kitsiinabox: cameo character
+* Noxid: for being Noxid
+* The testers of the original *OneShot*:
+    * DolphinsAreEvil
+    * Kyne
+    * TangyOranges
+    * letty
+    * ZeroGuilt
+    * Michael
+    * Mraof
+    * psychoTR2
+    * Nekkowe
+    * Divinuss
+    * M3ltd0wn
+    * Felix
+* Everyone who supported us since the original release.
+* You!
+
+Licenses
+--------
+
+MKXP is licensed under the
+[GNU GPL v3](https://www.gnu.org/licenses/gpl-3.0.en.html). The binary
+dependencies of MKXP have additional licenses.
+
+Ruby is licensed under the
+[Ruby license](https://www.ruby-lang.org/en/about/license.txt).
+
+Steamshim is licensed under the
+[Zlib license](http://www.zlib.net/zlib_license.html).
+
+The sounds used in the game from FreeSound.org are each licensed under one of
+the following licenses:
+* [CC0 1.0 Universal](http://creativecommons.org/publicdomain/zero/1.0/)
+* [Attribution 3.0 Unported](http://creativecommons.org/licenses/by/3.0/)
+
+Terminus is licensed under the [Open Font License](http://scripts.sil.org/OFL).
+
+Jenna Sue is unlicensed and free for commercial use.
+
+RM Typerighter is licensed under the
+[CC BY-ND](https://creativecommons.org/licenses/by-nd/3.0/).
+
+The FontStruction “Thirteen Pixel Fonts”
+(http://fontstruct.com/fontstructions/show/761985) by “30100flo” is licensed
+under a Creative Commons Attribution Share Alike license
+(http://creativecommons.org/licenses/by-sa/3.0/).
+
+WenQuanYi Micro Hei is dual-licensed under
+[Apache License 2.0](http://wenq.org/wqy2/index.cgi?Apache_License_2.0) or
+[GNU General Public License v3](http://www.gnu.org/copyleft/gpl.html)
+with font embedding exceptions.
+
+The wildtextures resources are
+[free for commercial use](http://www.wildtextures.com/terms-of-use/).
+
+The Textures.com terms of use can be found
+[here](http://www.textures.com/terms-of-use.html).
