@@ -127,27 +127,17 @@ def Init
         # * Seed limits tells the game how big each value in your seed can be
         # * this is done to prevent the game giving values biggen than what are checked for in game 
         # * (EG: each area only having 4 variations)
-        seedlimits = [4, 4, 4, 4, 2, 'next6', 1, 1, 1, 1, 'stuff between this and next6 dont matter', 1, 1, 1, 'next6', 1, 1, 1, 1, 'yeh', 4]
+        seedlimits = [4, 4, 4, 4, 2, 'next6', 1, 1, 1, 1, 'stuff between this and next6 dont matter', 1, 'next6', 1, 1, 1, 1, 'pog', 1, 1, 1, 4]
         entry = 0 # > The current entry in the seed that's being modified
         until entry >= seedlimits.length
-            tempseed = [] #used for pushing consistant long strings for randomization (for entries mostly)
-            tempentry = 0 #used for pushing consistant long strings for randomization (for entries mostly)
             if seedlimits[entry] == 'next6'
-                tempseed = [1, 2, 3, 4, 5, 6].shuffle
-                #print tempseed
-                until tempentry >= 6
-                    @Seed.push(tempseed[tempentry])
-                    $game_variables[122 + entry] = tempseed[tempentry]
-                    tempentry += 1
-                    entry += 1
-                end
+                @Seed[entry..(entry + 6)] = [1, 2, 3, 4, 5, 6].shuffle
+                entry += 6
             end
             @Seed.push(rand(1..seedlimits[entry]))
-            $game_variables[122 + entry] = @Seed[entry]
             entry += 1
       end
-    end
-  end
-
-
+    $game_variables[122..(122 + @Seed.length)] = @Seed
+end
+end
 end
