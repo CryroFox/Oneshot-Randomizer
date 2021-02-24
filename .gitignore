@@ -7,3 +7,5 @@ Languages
 *.zip
 *.rar
 *.rxproj
+__randomizer/sprites
+__randomizer/audio

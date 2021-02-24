@@ -44,6 +44,14 @@ module RPG
 	    filename = "af"
 	  end
 
+	  if $randomizer.af == true && filename.start_with?("niko")
+	    filename = "af"
+	  end
+
+	  if filename.start_with?($randomizer.MessiahName.to_s.downcase)
+	    filename.gsub!($randomizer.MessiahName.to_s.downcase, "niko")
+	  end
+
 	  if $game_switches[160] && filename.start_with?("niko")
 	    filename.gsub!(/niko/, "en")
 	  end
@@ -82,12 +90,21 @@ module RPG
 
       self.load_bitmap("Graphics/Lightmaps/", filename)
     end
+
     def self.light(filename)
       self.load_bitmap("Graphics/Lights/", filename)
     end
+    
     def self.misc(filename)
       self.load_bitmap("Graphics/Misc/", filename)
     end
+  
+    def self.tileset(filename)
+      #style = 'green' # $game_variables[123] ? 1 : "green" 
+      #return self.load_bitmap("Graphics/Tilesets/Barrens/" + style.to_s + "/", filename + '.png') if filename.start_with?('blue')
+      self.load_bitmap("Graphics/Tilesets/", filename)
+    end
+  
   end
 end
 

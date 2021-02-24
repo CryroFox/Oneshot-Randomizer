@@ -398,6 +398,10 @@ class Window_Message < Window_Selectable
 		    niko_sounds = [ "cat_2"]
 			@blipsound = niko_sounds[rand(niko_sounds.length)]
             Audio.se_play("Audio/SE/#{@blipsound}.wav", 50, rand(100..125)) unless @text.empty?
+          elsif $game_temp.message_face != nil && $game_temp.message_face.start_with?("niko") && $randomizer.af == true
+            niko_sounds = [ "cat_2"]
+          @blipsound = niko_sounds[rand(niko_sounds.length)]
+                Audio.se_play("Audio/SE/#{@blipsound}.wav", 50, rand(100..125)) unless @text.empty?
 	      else
             Audio.se_play("Audio/SE/#{@blipsound}.wav", 50) unless @text.empty?
 		  end
