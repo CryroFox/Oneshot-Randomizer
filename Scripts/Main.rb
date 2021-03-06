@@ -12,14 +12,16 @@ end
 SCRIPTS_DIR = "Scripts/"
 $randomizer = Randomizer.new
 
+
 def reload_all_scripts
   IO.foreach(SCRIPTS_DIR + "_scripts.txt") do |name|
     name.strip!
-    next if name.empty? || name.start_with?("#") || name == "Main"
+    next if name.empty? || name.start_with?("#") || name == "Main" || name == "_ModGameSDK"
     Kernel::load SCRIPTS_DIR + name + ".rb"
   end
   $randomizer.loadconfig
   $randomizer.newsplash
+  $randomizer.init
 end
 
 def load_plugins
@@ -47,6 +49,7 @@ begin
   Oneshot.exiting false
   $randomizer.loadconfig
   $randomizer.newsplash
+  $randomizer.init
   
   
 

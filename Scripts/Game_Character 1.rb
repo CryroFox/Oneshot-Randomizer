@@ -65,6 +65,7 @@ class Game_Character
     @locked = false
     @prelock_direction = 0
     @custom_flags = []
+    @huetimer = 0
   end
   #--------------------------------------------------------------------------
   # * Determine if Moving

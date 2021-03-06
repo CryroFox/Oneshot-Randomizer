@@ -11,6 +11,7 @@
 class Randomizer
     attr_accessor :Titles               # * Splash texts for the game window!
     attr_accessor :Seed                 # * The randomization seed
+    attr_accessor :sunitems             # * How many sun fragments u got
     attr_accessor :MessiahName          # * The name of the Messiah
     attr_accessor :PlayerSprite         # * Player Sprite
     attr_accessor :PlayerGasSprite      # * Player Gasmask Sprite
@@ -20,11 +21,19 @@ class Randomizer
     attr_accessor :PlayerGasLightmap    # * Player Gasmask Lightmap Sprite
     attr_accessor :PlayerSunLightmap    # * Player Holding Sun Lightmap Sprite
     attr_accessor :PlayerNyoomLightmap  # * Player On Roomba Lightmap Sprite
-    attr_accessor :af  # * Player On Roomba Lightmap Sprite
+    attr_accessor :snailP               # * Snail Party
+    attr_accessor :snail                # * Snail Mode :3
+    attr_accessor :en                   # * Entity Sprite Toggle
+    attr_accessor :af                   # * April Fools Toggle
     
     def initialize
+
+        #* Game Information 
         @Titles = IO.readlines("__Randomizer/splashes.txt")
         @Seed = Array.new
+        @sunitems = 0
+
+        #? Config Bools and Vars
         @MessiahName = ''
         @PlayerSprite = ''
         @PlayerSunSprite = ''
@@ -34,7 +43,10 @@ class Randomizer
         @PlayerGasLightmap = ''
         @PlayerSunLightmap = ''
         @PlayerNyoomLightmap = ''
-        @af = false
+        @snailP = false
+        @snail = false
+        @af =    false
+        @en =    false
     end
 
 # *----------------------------------------------------------
@@ -107,11 +119,29 @@ def loadconfig
         if vals[1] != ''
         @PlayerNyoomLightmap = vals[1].to_s.downcase
         end
+    when "🐌"
+        if vals[1] == 'true'
+            @snail = true
+            elsif vals[1] == 'false' || vals[1] == ''
+            @snail = false
+            end   
+    when "🐌🎉"
+        if vals[1] == 'true'
+            @snailP = true
+            elsif vals[1] == 'false' || vals[1] == ''
+            @snailP = false
+            end   
     when "af"
         if vals[1] == 'true'
         @af = true
         elsif vals[1] == 'false' || vals[1] == ''
         @af = false
+        end
+    when "en"
+        if vals[1] == 'true'
+        @en = true
+        elsif vals[1] == 'false' || vals[1] == ''
+        @en = false
         end
     end
   end
@@ -137,7 +167,10 @@ def Init
             @Seed.push(rand(1..seedlimits[entry]))
             entry += 1
       end
-    $game_variables[122..(122 + @Seed.length)] = @Seed
-end
-end
+      for i in $game_variables[122..(122 + @Seed.length)] do
+        $game_variables[122 + i] = @Seed[i]
+        print $game_variables[122 + i] = @Seed[i]
+      end    
+    end
+  end
 end

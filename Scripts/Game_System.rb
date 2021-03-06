@@ -35,6 +35,7 @@ class Game_System
     @message_frame = 0
     @save_count = 0
     @magic_number = 0
+    @SDKtimer = 0
   end
   #--------------------------------------------------------------------------
   # * Play Background Music
@@ -202,13 +203,29 @@ class Game_System
   # * Frame Update
   #--------------------------------------------------------------------------
   def update
-
     if Input.press?(Input::L) and Input.press?(Input::R)
       $scene = $scene.class.new
       reload_all_scripts
       $game_system = Game_System.new
+      RPG::Cache.clear 
     end
 
+    @SDKtimer += 1
+    if @SDKtimer == 400
+
+
+
+      # * Set The New RP Values
+      $discordSDK.Details   = 'pls'
+      $discordSDK.State     = 'discord'
+      
+      #* Update The Presence
+      $discordSDK.UpdateRichPresence
+
+      @SDKtimer = 0
+    end
+
+    DiscordGameSDK::run_callbacks
     # reduce timer by 1
     if @timer_working and @timer > 0
       @timer -= 1

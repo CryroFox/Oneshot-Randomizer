@@ -9,6 +9,7 @@ module RPG
 	  if $game_switches[160] && filename.start_with?("niko")
 	    filename.gsub!(/niko/, "en")
 	  end
+    hue = rand(0..255) if filename.start_with?("snail")
     # * Randomizer Sprite Override
     # ? Messiah Sprite
     if filename == ("niko") or filename == ("niko_finale") and $randomizer.PlayerSprite != ''
@@ -31,6 +32,10 @@ module RPG
       return self.load_bitmap(@randomizerfolder, filename, hue)
     end
     
+    if $randomizer.af && filename.start_with?("niko")
+	    filename.gsub!(/niko/, "en")
+	  end
+
     self.load_bitmap("Graphics/Characters/", filename, hue)
     end
     def self.face(filename)

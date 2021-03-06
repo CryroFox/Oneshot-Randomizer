@@ -10,6 +10,10 @@ class Game_Character
   # * Frame Update
   #--------------------------------------------------------------------------
   def update
+    @huetimer += 1
+    @character_hue = (@character_hue + 0.01) if $randomizer.snailP && @character_name.start_with?("snail") and @huetimer == 10
+    @huetimer = 0 if @huetimer >= 10
+
     # Branch with jumping, moving, and stopping
     if jumping?
       update_jump

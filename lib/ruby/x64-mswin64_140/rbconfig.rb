@@ -23,7 +23,7 @@ module RbConfig
   CONFIG["MINOR"] = "5"
   CONFIG["TEENY"] = "3"
   CONFIG["PATCHLEVEL"] = "105"
-  CONFIG["prefix"] = (TOPDIR || DESTDIR + "C:/.conan/.conan/data/ruby/2.5.3/eliza/testing/package/ea8db0df591ab290059da97fdfdf558e0f5eb50d")
+  CONFIG["prefix"] = (TOPDIR || DESTDIR + "C:/.conan/75f366/1")
   CONFIG["EXEEXT"] = ".exe"
   CONFIG["ruby_install_name"] = "ruby"
   CONFIG["RUBY_INSTALL_NAME"] = "ruby"
@@ -170,7 +170,7 @@ module RbConfig
   CONFIG["vendorarchhdrdir"] = "$(vendorhdrdir)/$(sitearch)"
   CONFIG["PLATFORM_DIR"] = "win32"
   CONFIG["THREAD_MODEL"] = "win32"
-  CONFIG["configure_args"] = "--with-make-prog=nmake --enable-shared --prefix=C:\\.conan\\.conan\\data\\ruby\\2.5.3\\eliza\\testing\\package\\ea8db0df591ab290059da97fdfdf558e0f5eb50d --target=x64-mswin64 --without-ext=\"dbm,gdbm,pty,readline,syslog,\"--disable-install-doc"
+  CONFIG["configure_args"] = "--with-make-prog=nmake --enable-shared --prefix=C:\\.conan\\75f366\\1 --target=x64-mswin64 --without-ext=\"dbm,gdbm,pty,readline,syslog,\"--disable-install-doc"
   CONFIG["try_header"] = "try_compile"
   CONFIG["ruby_pc"] = "ruby-2.5.pc"
   CONFIG["UNICODE_VERSION"] = "10.0.0"

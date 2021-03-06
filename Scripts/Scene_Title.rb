@@ -28,6 +28,7 @@ class Scene_Title
     $data_system        = load_data("Data/System.rxdata")
     Language.initialize_database
     # Load save game/initialize data
+    $discordSDK   = Discord.new
     $game_temp = Game_Temp.new
     new_game #unless load
     # Make system object

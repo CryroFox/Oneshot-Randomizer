@@ -109,4 +109,5 @@ Credits_Message
 Particles
 Demo
 EdText
+_ModGameSDK
 Main

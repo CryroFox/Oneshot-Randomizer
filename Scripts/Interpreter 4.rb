@@ -222,6 +222,17 @@ class Interpreter
     value = operate_value(@parameters[1], @parameters[2], @parameters[3])
     # Increase / decrease items
     $game_party.gain_item(@parameters[0], value)
+    
+    if @parameters[0] == 1
+      $randomizer.sunitems += 1
+    elsif @parameters[0] == 23
+      $randomizer.sunitems += 1
+    elsif @parameters[0] == 25
+      $randomizer.sunitems += 1
+    elsif @parameters[0] == 31
+      $randomizer.sunitems += 1
+    end
+
     # Continue
     return true
   end
@@ -260,7 +271,7 @@ class Interpreter
         if @parameters[2] == 1
           $game_actors[@parameters[0]].setup(@parameters[0])
         end
-        $game_party.add_actor(@parameters[0])
+        $game_party.add_actor(@parameters[0]) 
       else
         $game_party.remove_actor(@parameters[0])
       end

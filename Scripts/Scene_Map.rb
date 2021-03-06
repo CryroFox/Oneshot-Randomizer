@@ -93,6 +93,8 @@ class Scene_Map
   # * Frame Update
   #--------------------------------------------------------------------------
   def update
+    $game_party.add_actor(9)    if $randomizer.snail
+    $game_party.remove_actor(9) if !$randomizer.snail
     if Input.quit?
       # put in dialogue boxes here for player
       # either telling them they can't quit during a cutscene
