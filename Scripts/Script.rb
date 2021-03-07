@@ -79,6 +79,12 @@ module Script
     end
   end
 
+  def self.gain_all_items
+    for i in 1..99
+      $game_party.gain_item(i, 99)
+    end
+  end
+
   def self.bruteforce_vars
     if($game_oneshot.bruteforce_start == nil)
       $game_oneshot.bruteforce_start = Graphics.frame_count

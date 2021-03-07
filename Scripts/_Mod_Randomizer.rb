@@ -1,17 +1,20 @@
-# //================================================================================================================
-# > By Cryro the fox :3c
-# !   #####    ####        #####      ###    ##     ##  ####     #####   ###    ###  ##  ######  #####  #####    
-# !  ##   ##  ##           ##  ##    ## ##   ####   ##  ##  ##  ##   ##  ## #  # ##  ##     ##   ##     ##  ##   
-# !  ##   ##   ###         #####    ##   ##  ##  ## ##  ##  ##  ##   ##  ##  ##  ##  ##    ##    #####  #####    
-# !  ##   ##     ##        ##  ##   #######  ##    ###  ##  ##  ##   ##  ##      ##  ##   ##     ##     ##  ##   
-# !   #####   ####         ##   ##  ##   ##  ##     ##  ####     #####   ##      ##  ##  ######  #####  ##   ##  
-# > Welcome to my hell.
-# //================================================================================================================
+# //================================================================================================================#
+# > By Cryro the fox :3c                                                                                            #
+# !   #####    ####        #####      ###    ##     ##  ####     #####   ###    ###  ##  ######  #####  #####     ! #
+# !  ##   ##  ##           ##  ##    ## ##   ####   ##  ##  ##  ##   ##  ## #  # ##  ##     ##   ##     ##  ##    ! #
+# !  ##   ##   ###         #####    ##   ##  ##  ## ##  ##  ##  ##   ##  ##  ##  ##  ##    ##    #####  #####     ! #
+# !  ##   ##     ##        ##  ##   #######  ##    ###  ##  ##  ##   ##  ##      ##  ##   ##     ##     ##  ##    ! #
+# !   #####   ####         ##   ##  ##   ##  ##     ##  ####     #####   ##      ##  ##  ######  #####  ##   ##   ! #
+# > Welcome to my hell.                                                                                             #
+# //================================================================================================================#
 
 class Randomizer
     attr_accessor :Titles               # * Splash texts for the game window!
     attr_accessor :Seed                 # * The randomization seed
-    attr_accessor :sunitems             # * How many sun fragments u got
+    attr_accessor :SunItems             # * How many sun fragments u got
+    attr_accessor :ShuffledOST          # * Shuffled Music List
+    attr_accessor :OriginalOST          # * Music List
+    attr_accessor :ShuffleMusic         # * Shuffle Music?
     attr_accessor :MessiahName          # * The name of the Messiah
     attr_accessor :PlayerSprite         # * Player Sprite
     attr_accessor :PlayerGasSprite      # * Player Gasmask Sprite
@@ -26,27 +29,29 @@ class Randomizer
     attr_accessor :en                   # * Entity Sprite Toggle
     attr_accessor :af                   # * April Fools Toggle
     
+
     def initialize
 
         #* Game Information 
         @Titles = IO.readlines("__Randomizer/splashes.txt")
         @Seed = Array.new
-        @sunitems = 0
+        @SunItems = 0
 
         #? Config Bools and Vars
-        @MessiahName = ''
-        @PlayerSprite = ''
-        @PlayerSunSprite = ''
-        @PlayerGasSprite = ''
-        @PlayerNyoomSprite = ''
-        @PlayerLightmap = ''
-        @PlayerGasLightmap = ''
-        @PlayerSunLightmap = ''
+        @MessiahName         = ''
+        @PlayerSprite        = ''
+        @PlayerSunSprite     = ''
+        @PlayerGasSprite     = ''
+        @PlayerNyoomSprite   = ''
+        @PlayerLightmap      = ''
+        @PlayerGasLightmap   = ''
+        @PlayerSunLightmap   = ''
         @PlayerNyoomLightmap = ''
-        @snailP = false
-        @snail = false
-        @af =    false
-        @en =    false
+        @snailP              = false
+        @snail               = false
+        @af                  = false
+        @en                  = false
+        @ShuffleMusic        = false
     end
 
 # *----------------------------------------------------------
@@ -72,9 +77,14 @@ def loadconfig
 
     when "Seed"
         if vals[1] != ''
-        @Seed = vals[1].to_s.split("")
+        @Seed = vals[1].to_s.split(":")
         end
-
+    when "ShuffleMusic"
+        if vals[1] == 'true'
+            @ShuffleMusic = true
+            elsif vals[1] == 'false' || vals[1] == ''
+            @ShuffleMusic = false
+            end  
     when "Name"
         if vals[1] != ''
         @MessiahName = vals[1].to_s
@@ -151,13 +161,13 @@ end
 #  * Initialize the new random Seed
 # *----------------------------------------------------------
 
-
 def Init
-    if @Seed == []
+    if @Seed == [] || @Seed != [] 
+        @Seed = []
         # * Seed limits tells the game how big each value in your seed can be
         # * this is done to prevent the game giving values biggen than what are checked for in game 
         # * (EG: each area only having 4 variations)
-        seedlimits = [4, 4, 4, 4, 2, 'next6', 1, 1, 1, 1, 'stuff between this and next6 dont matter', 1, 'next6', 1, 1, 1, 1, 'pog', 1, 1, 1, 4]
+        seedlimits = [4, 4, 4, 4, 62]
         entry = 0 # > The current entry in the seed that's being modified
         until entry >= seedlimits.length
             if seedlimits[entry] == 'next6'
@@ -167,10 +177,44 @@ def Init
             @Seed.push(rand(1..seedlimits[entry]))
             entry += 1
       end
-      for i in $game_variables[122..(122 + @Seed.length)] do
-        $game_variables[122 + i] = @Seed[i]
-        print $game_variables[122 + i] = @Seed[i]
-      end    
+      #for i in $game_variables[122..(122 + @Seed.length)] do
+      #  $game_variables[122 + i] = @Seed[i]
+      #  print $game_variables[122 + i] = @Seed[i]
+      #end    
     end
+
+    self.Shuffle_Music
+
   end
+
+#!---------------------------------------------------------#
+#! Permutation definition (Thank you RKevin for saving me) #
+#!---------------------------------------------------------#
+def get_shuffled_permutation(arr, seed)
+    arr = arr.clone # so we don't destroy the original copy
+    retval = []
+    while arr.length != 0
+        idx = seed % arr.length
+        seed /= arr.length
+        retval.push(arr[idx])
+        arr.delete_at(idx)
+    end
+    return retval
+end
+
+def factorial(n)
+    return 1 if n == 0
+    return n*factorial(n-1)
+end
+#!---------------------------------------------------------#
+#!-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=#
+#!---------------------------------------------------------#
+
+def Shuffle_Music
+    @OriginalOST = Dir.glob('Audio/BGM/*.ogg')
+    s = factorial(@Seed[4])
+    $randomizer.ShuffledOST = get_shuffled_permutation(@OriginalOST, s)
+
+end
+
 end

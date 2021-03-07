@@ -42,6 +42,7 @@ class Window_Message < Window_Selectable
     # Text blip sound
     @blipsound = nil
   end
+
   #--------------------------------------------------------------------------
   # * Dispose
   #--------------------------------------------------------------------------
@@ -53,6 +54,7 @@ class Window_Message < Window_Selectable
     end
     super
   end
+
   #--------------------------------------------------------------------------
   # * Terminate Message
   #--------------------------------------------------------------------------
@@ -82,47 +84,54 @@ class Window_Message < Window_Selectable
     self.pause = false
     self.index = -1
   end
+
   #--------------------------------------------------------------------------
   # * Refresh: Load new message text and pre-process it
   #--------------------------------------------------------------------------
   def refresh
     # Initialize
     @blip = BLIP_TIME
-    @text = ''
+    @text = ""
 
     # Pre-process text
     if $game_temp.message_text != nil && !$game_temp.message_text.empty?
       text = $game_temp.message_text
 
       # Determine blip sound
-      @blipsound = text.start_with?('[') ? 'text_robot' : 'text'
+      @blipsound = text.start_with?("[") ? "text_robot" : "text"
 
       # Substitute variables, actors, player name, newlines, etc
       text.gsub!(/\\v\[([0-9]+)\]/) do
         $game_variables[$1.to_i]
       end
-	  #add a space to the beginning of the player name to better deal with longer names in asian languages
-	  if (Language::FONT_WESTERN == Font.default_name)
+
+  #    if !$randomizer.MessiahName.start_with?("\\") 
+  #      text.gsub!("NIKO", $randomizer.MessiahName.to_s.upcase)
+  #      text.gsub!("niko", $randomizer.MessiahName.to_s.downcase)
+  #      text.gsub!("Niko", $randomizer.MessiahName.to_s)
+  #    else
+  #      text.gsub!("niko", $randomizer.MessiahName.to_s)
+  #      text.gsub!("NIKO", $randomizer.MessiahName.to_s)
+  #      text.gsub!("Niko", $randomizer.MessiahName.to_s)
+  #    end
+
+      altcodes = ["╥", "╙", "╘", "╒", "╓", "╫", "╪", "┘", "┌", "█", "▄", "▌", "▐", "▀", "░", "▒", "▓", "δ", "Σ", "σ", "ð", "φ", "⌠", "⌡"]
+      charset = Array("A".."Z") + Array("a".."z") + Array(" ") + altcodes
+      text.gsub!(/\\e\[([0-9]+)\]/) do
+        generate_code($1.to_i)
+      end
+      #add a space to the beginning of the player name to better deal with longer names in asian languages
+      if (Language::FONT_WESTERN == Font.default_name)
         text.gsub!("\\p", $game_oneshot.player_name)
       else
         text.gsub!("\\p", " " + $game_oneshot.player_name)
       end
       text.gsub!("\\n", "\n")
-      if !$randomizer.MessiahName.start_with?("\\")
-      text.gsub!("NIKO", $randomizer.MessiahName.to_s.upcase)
-      text.gsub!("niko", $randomizer.MessiahName.to_s.downcase)
-      text.gsub!("Niko", $randomizer.MessiahName.to_s)
-    else
-      text.gsub!("niko", $randomizer.MessiahName.to_s)
-      text.gsub!("NIKO", $randomizer.MessiahName.to_s)
-      text.gsub!("Niko", $randomizer.MessiahName.to_s)
-    end
       # Handle text-rendering escape sequences
       text.gsub!(/\\c\[([0-9]+)\]/, "\0[\\1]")
       text.gsub!("\\.", "\001")
       text.gsub!("\\|", "\002")
       text.gsub!("\\>", "\004")
-
 
       text.gsub!("\\@", "\003")
       # Finally convert the backslash back
@@ -131,12 +140,12 @@ class Window_Message < Window_Selectable
       # Now split text into lines by measuring text metrics
       x = y = 0
       maxwidth = self.contents.width - 4 - ($game_temp.message_face == nil ? 0 : 96)
-      spacewidth = self.contents.text_size(' ').width
+      spacewidth = self.contents.text_size(" ").width
       text.split("\n").each do |line|
-        line.split(' ').each do |word|
+        line.split(" ").each do |word|
 
           # Get width of this word and insert a newline if it goes out of bounds
-          width = self.contents.text_size(word.gsub(/(\000\[[0-9]+\]|\001|\002)/, '')).width
+          width = self.contents.text_size(word.gsub(/(\000\[[0-9]+\]|\001|\002)/, "")).width
           if word.include?("\003")
             #ignore new facepics
             width = 0
@@ -152,7 +161,7 @@ class Window_Message < Window_Selectable
           if x == 0
             @text << word
           else
-            @text << ' ' << word
+            @text << " " << word
           end
           x += width + spacewidth
         end
@@ -175,11 +184,11 @@ class Window_Message < Window_Selectable
     # Blit face graphic
     if $game_temp.message_face != nil
       if $game_player.character_name == "niko_gasmask" || $game_player.character_name == "niko_bulb_gasmask" \
-		|| $game_player.character_name == "en_gasmask" || $game_player.character_name == "en_bulb_gasmask"
+        || $game_player.character_name == "en_gasmask" || $game_player.character_name == "en_bulb_gasmask"
         if $game_temp.message_face.start_with?("niko")
           $game_temp.message_face = "niko_gasmask"
         end
-		if $game_temp.message_face.start_with?("en")
+        if $game_temp.message_face.start_with?("en")
           $game_temp.message_face = "en_gasmask"
         end
       end
@@ -206,6 +215,7 @@ class Window_Message < Window_Selectable
       end
     end
   end
+
   #--------------------------------------------------------------------------
   # * Tick: render a new character to the message box
   #--------------------------------------------------------------------------
@@ -242,20 +252,20 @@ class Window_Message < Window_Selectable
       # \|
       if c == "\002"
         # Pause
-        @text_pause = 10*4
+        @text_pause = 10 * 4
         return
       end
       if c == "\003"
         # new facepic
         face_name = @text.slice!(/^[^\s]+ */).strip()
-        self.contents.fill_rect(self.contents.width - 96, 0, 96, 96, Color.new(0,0,0,0))
+        self.contents.fill_rect(self.contents.width - 96, 0, 96, 96, Color.new(0, 0, 0, 0))
         $game_temp.message_face = face_name
-		if $game_player.character_name == "niko_gasmask" || $game_player.character_name == "niko_bulb_gasmask" \
-      	  || $game_player.character_name == "en_gasmask" || $game_player.character_name == "en_bulb_gasmask"
+        if $game_player.character_name == "niko_gasmask" || $game_player.character_name == "niko_bulb_gasmask" \
+          || $game_player.character_name == "en_gasmask" || $game_player.character_name == "en_bulb_gasmask"
           if $game_temp.message_face.start_with?("niko")
             $game_temp.message_face = "niko_gasmask"
           end
-		  if $game_temp.message_face.start_with?("en")
+          if $game_temp.message_face.start_with?("en")
             $game_temp.message_face = "en_gasmask"
           end
         end
@@ -304,6 +314,7 @@ class Window_Message < Window_Selectable
       end
     end
   end
+
   #--------------------------------------------------------------------------
   # * Set Window Position and Opacity Level
   #--------------------------------------------------------------------------
@@ -312,11 +323,11 @@ class Window_Message < Window_Selectable
       self.y = 16
     else
       case $game_system.message_position
-      when 0  # up
+      when 0 # up
         self.y = 16
-      when 1  # middle
+      when 1 # middle
         self.y = 160
-      when 2  # down
+      when 2 # down
         self.y = 336
       end
     end
@@ -326,6 +337,7 @@ class Window_Message < Window_Selectable
       @opaque = false
     end
   end
+
   #--------------------------------------------------------------------------
   # * Frame Update
   #--------------------------------------------------------------------------
@@ -335,7 +347,7 @@ class Window_Message < Window_Selectable
     # Handle fade-out effect
     if @fade_out
       self.opacity -= 48
-      self.contents_opacity -= 48*2
+      self.contents_opacity -= 48 * 2
       if self.opacity == 0
         @fade_out = false
         self.visible = false
@@ -392,19 +404,15 @@ class Window_Message < Window_Selectable
         @text_pause -= 1
       else
         if @blip >= BLIP_TIME
-		  #april fools
-		  t = Time.now
-	      if $game_temp.message_face != nil && t.month == 4 && t.day == 1 && $game_temp.message_face.start_with?("niko")
-		    niko_sounds = [ "cat_2"]
-			@blipsound = niko_sounds[rand(niko_sounds.length)]
+          #april fools
+          t = Time.now
+          if $game_temp.message_face != nil && t.month == 4 && t.day == 1 && $game_temp.message_face.start_with?("niko")
+            niko_sounds = ["cat_2"]
+            @blipsound = niko_sounds[rand(niko_sounds.length)]
             Audio.se_play("Audio/SE/#{@blipsound}.wav", 50, rand(100..125)) unless @text.empty?
-          elsif $game_temp.message_face != nil && $game_temp.message_face.start_with?("niko") && $randomizer.af == true
-            niko_sounds = [ "cat_2"]
-          @blipsound = niko_sounds[rand(niko_sounds.length)]
-                Audio.se_play("Audio/SE/#{@blipsound}.wav", 50, rand(100..125)) unless @text.empty?
-	      else
+          else
             Audio.se_play("Audio/SE/#{@blipsound}.wav", 50) unless @text.empty?
-		  end
+          end
           @blip = 0
         else
           @blip += 1
@@ -457,6 +465,7 @@ class Window_Message < Window_Selectable
       end
     end
   end
+
   #--------------------------------------------------------------------------
   # * Cursor Rectangle Update
   #--------------------------------------------------------------------------
@@ -468,5 +477,11 @@ class Window_Message < Window_Selectable
     else
       self.cursor_rect.empty
     end
+  end
+
+  def generate_code(number)
+    altcodes = ["╥", "╙", "╘", "╒", "╓", "╫", "╪", "┘", "┌", "█", "▄", "▌", "▐", "▀", "░", "▒", "▓", "δ", "Σ", "σ", "ð", "φ", "⌠", "⌡"]
+    charset = Array("A".."Z") + Array("a".."z") + Array(" ") + altcodes
+    Array.new(number) { charset.sample }.join
   end
 end

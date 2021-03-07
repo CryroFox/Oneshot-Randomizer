@@ -224,13 +224,13 @@ class Interpreter
     $game_party.gain_item(@parameters[0], value)
     
     if @parameters[0] == 1
-      $randomizer.sunitems += 1
+      $randomizer.SunItems += 1
     elsif @parameters[0] == 23
-      $randomizer.sunitems += 1
+      $randomizer.SunItems += 1
     elsif @parameters[0] == 25
-      $randomizer.sunitems += 1
+      $randomizer.SunItems += 1
     elsif @parameters[0] == 31
-      $randomizer.sunitems += 1
+      $randomizer.SunItems += 1
     end
 
     # Continue

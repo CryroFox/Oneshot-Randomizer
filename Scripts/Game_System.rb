@@ -42,12 +42,22 @@ class Game_System
   #     bgm : background music to be played
   #--------------------------------------------------------------------------
   def bgm_play(bgm)
-    @playing_bgm = bgm
+    if $randomizer.ShuffleMusic
+      s = $randomizer.OriginalOST.index("Audio/BGM/" + bgm.name + ".ogg")
+      song = $randomizer.ShuffledOST[s] unless bgm.name == nil || bgm.name == ""
+      @playing_bgm = bgm
+      if song != nil and song != ""
+      Audio.bgm_play(song, bgm.volume * 0.8, bgm.pitch)
+    else
+      Audio.bgm_stop
+    end
+  else
     if bgm != nil and bgm.name != ""
       Audio.bgm_play("Audio/BGM/" + bgm.name, bgm.volume * 0.8, bgm.pitch)
     else
       Audio.bgm_stop
     end
+  end
     Graphics.frame_reset
   end
   #--------------------------------------------------------------------------
@@ -213,11 +223,16 @@ class Game_System
     @SDKtimer += 1
     if @SDKtimer == 400
 
-
-
       # * Set The New RP Values
-      $discordSDK.Details   = 'pls'
-      $discordSDK.State     = 'discord'
+      @SDKseed = ($randomizer.Seed.to_s.gsub!(',', ':')).gsub!(' ', '')
+      $discordSDK.LargeImageText   = ('Seed: ' + @SDKseed)
+      $discordSDK.Details          = 'Stat Fact: ' + $game_party.steps.to_s + ' Steps taken'
+      
+      $discordSDK.SmallImage       = $data_items[$game_variables[1]].icon_name                unless $game_variables[1] == 0
+      $discordSDK.SmallImageText   = $data_items[$game_variables[1]].description.to_s    unless $game_variables[1] == 0
+      $discordSDK.State            = 'Sun Fragments'
+      $discordSDK.State            = 'Sun Fragments (0 of 4)'  unless $randomizer.SunItems != 0
+      $discordSDK.PartySize        = $randomizer.SunItems.to_i unless $randomizer.SunItems == 0
       
       #* Update The Presence
       $discordSDK.UpdateRichPresence

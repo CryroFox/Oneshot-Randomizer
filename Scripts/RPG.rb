@@ -53,7 +53,7 @@ module RPG
 	    filename = "af"
 	  end
 
-	  if filename.start_with?($randomizer.MessiahName.to_s.downcase)
+	  if filename.start_with?($randomizer.MessiahName.to_s.downcase) and $randomizer.MessiahName.to_s.downcase != '' and $randomizer.MessiahName.to_s.downcase != nil
 	    filename.gsub!($randomizer.MessiahName.to_s.downcase, "niko")
 	  end
 

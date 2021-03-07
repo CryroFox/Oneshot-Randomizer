@@ -21,7 +21,7 @@ def reload_all_scripts
   end
   $randomizer.loadconfig
   $randomizer.newsplash
-  $randomizer.init
+  $randomizer.Init
 end
 
 def load_plugins
@@ -49,7 +49,7 @@ begin
   Oneshot.exiting false
   $randomizer.loadconfig
   $randomizer.newsplash
-  $randomizer.init
+  $randomizer.Init
   
   
 
