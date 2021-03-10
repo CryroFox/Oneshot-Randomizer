@@ -241,7 +241,7 @@ def real_load
     # switch 181 or 183 or 186 means its time for a dream, so no BGM
 
     if !($game_switches[181] || $game_switches[183] || $game_switches[186] || $game_switches[188] || $game_switches[190])
-      $game_system.bgm_play($game_system.playing_bgm)
+      $game_system.bgm_play($game_system.playing_bgm) unless $game_system.playing_bgm == nil      
       $game_system.bgs_play($game_system.playing_bgs)
     end
     # Update map (run parallel process event)

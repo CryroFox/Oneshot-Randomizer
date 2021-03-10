@@ -6,6 +6,7 @@ module RPG
 
     def self.character(filename, hue)
 	  filename = filename.downcase
+    filename = 'blank' if filename.start_with?('!')
 	  if $game_switches[160] && filename.start_with?("niko")
 	    filename.gsub!(/niko/, "en")
 	  end

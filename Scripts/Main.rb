@@ -21,7 +21,7 @@ def reload_all_scripts
   end
   $randomizer.loadconfig
   $randomizer.newsplash
-  $randomizer.Init
+  $randomizer.CreateSeed
 end
 
 def load_plugins
@@ -49,7 +49,7 @@ begin
   Oneshot.exiting false
   $randomizer.loadconfig
   $randomizer.newsplash
-  $randomizer.Init
+  $randomizer.CreateSeed
   
   
 
@@ -74,4 +74,8 @@ rescue Errno::ENOENT
   # If unable to open file, display message and end
   filename = $!.message.sub("No such file or directory - ", "")
   print("Unable to find file #{filename}.")
+rescue Exception
+  retry
+rescue => e
+  retry
 end

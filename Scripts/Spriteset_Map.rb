@@ -372,4 +372,31 @@ class Spriteset_Map
       footprint.correctY(y)
     end
   end
+  #--------------------------------------------------------------------------
+  # * Add Character
+  #--------------------------------------------------------------------------
+  def add_character(game_character)
+    # Returns if Character already has sprite
+    for sprite in @character_sprites
+      return if sprite.character == game_character
+    end
+    # Adds New Sprite
+    @character_sprites << Sprite_Character.new(@viewport, @viewport_lights, game_character)
+  end
+  #--------------------------------------------------------------------------
+  # * Delete Character
+  #--------------------------------------------------------------------------
+  def delete_character(game_character)
+    # Pass Through Sprites
+    for sprite in @character_sprites
+      # If Character Matches
+      if sprite.character == game_character
+        # Dispose Sprite
+        sprite.dispose
+        # Delete from List
+        @character_sprites.delete(sprite)
+        break
+      end
+    end
+  end
 end

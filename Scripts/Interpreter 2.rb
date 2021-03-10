@@ -10,6 +10,7 @@ class Interpreter
   # * Event Command Execution
   #--------------------------------------------------------------------------
   def execute_command
+    return if $randomizer.InfoGen
     # If last to arrive for list of event commands
     if @index >= @list.size - 1
       # End event

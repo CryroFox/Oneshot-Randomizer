@@ -1,4 +1,5 @@
 _Mod_Randomizer
+_Mod_RandomizerUtils
 RPG
 Game_Temp
 Game_System
@@ -109,5 +110,6 @@ Credits_Message
 Particles
 Demo
 EdText
+_ModEventSpawn
 _ModGameSDK
 Main

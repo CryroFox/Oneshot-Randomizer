@@ -39,6 +39,7 @@ class Game_Map
   attr_accessor :wrapping                 # map is wrapping?
   attr_accessor :pan_offset_y             # offset of y-coord of panorama
   attr_accessor :ambient                  # ambient light
+  attr_accessor :map_id                   # map id
   attr_reader   :passages                 # passage table
   attr_reader   :priorities               # prioroty table
   attr_reader   :terrain_tags             # terrain tag table
@@ -548,4 +549,121 @@ class Game_Map
       @fog_opacity_duration -= 1
     end
   end
+
+    #-------------------------------------------------------------------------
+    # * Name      : Add Event
+    #   Info      : Adds Game_Event to Game_Map#events list
+    #   Author    : SephirothSpawn
+    #   Call Info : RPG::Event object
+    #-------------------------------------------------------------------------
+    def add_event(event)
+      # Change Id if Already Taken
+      event.id = @events.keys.max + 1 if @events.has_key?(event.id)
+      # Creates New Event
+      @events[event.id] = Game_Event.new(@map_id, event)
+      # Adds To Spriteset
+      if $scene.is_a?(Scene_Map) && $scene.spriteset.is_a?(Spriteset_Map)
+        $scene.spriteset.add_character(@events[event.id])
+      end
+    end
+    #-------------------------------------------------------------------------
+    # * Name      : Delete Event
+    #   Info      : Deletes Game_Event to Game_Map#events list
+    #   Author    : SephirothSpawn
+    #   Call Info : Event ID
+    #-------------------------------------------------------------------------
+    def delete_event(event_id = 1)
+      # Return if event not present
+      return unless @events.has_key?(event_id)
+      # Removes event from spriteset
+      if $scene.is_a?(Scene_Map) && $scene.spriteset.is_a?(Spriteset_Map)
+        $scene.spriteset.delete_character(@events[event_id])
+      end
+      # Deletes event from events list
+      @events.delete(event_id)
+    end
+    #-------------------------------------------------------------------------
+    # * Name      : Add Character
+    #   Info      : Adds Game_Character to Game_Map#characters list
+    #   Author    : SephirothSpawn
+    #   Call Info : Game_Character, ID of Event (Auto-corrects if taken)
+    #-------------------------------------------------------------------------
+    def add_character(character, id = nil)
+      # If ID Already taken or nil
+      if id.nil? || @characters.has_key?(id)
+        id = @characters.empty? ? 1 : @characters.keys.max + 1
+      end
+      # Creates New Event
+      @characters[id] = character
+      # Adds To Spriteset
+      if $scene.is_a?(Scene_Map) && $scene.spriteset.is_a?(Spriteset_Map)
+        $scene.spriteset.add_character(character)
+      end
+    end
+    #-------------------------------------------------------------------------
+    # * Name      : Delete Character
+    #   Info      : Deletes Game_Character to Game_Map#characters list
+    #   Author    : SephirothSpawn
+    #   Call Info : Character ID
+    #-------------------------------------------------------------------------
+    def delete_character(character_id = 1)
+      # Return if character not present
+      return unless @characters.has_key?(character_id)
+      # Removes character from spriteset
+      if $scene.is_a?(Scene_Map) && $scene.spriteset.is_a?(Spriteset_Map)
+        $scene.spriteset.delete_character(@characters[character_id])
+      end
+      # Deletes character from characters list
+      @characters.delete(character_id)
+    end
+    #-------------------------------------------------------------------------
+    # * Name      : Event?
+    #   Info      : Is there an event on x and y
+    #   Author    : Trickster
+    #   Call Info : Two Arguments Integer X, Y - Position to Check
+    #-------------------------------------------------------------------------
+    def event?(x, y)
+      @events.each_value do |event|
+        return true if event.x == x and event.y == y
+      end
+      return false
+    end
+    #-------------------------------------------------------------------------
+    # * Name      : Event at
+    #   Info      : Returns event at location or nil
+    #   Author    : SephirothSpawn
+    #   Call Info : Two Arguments Integer X, Y - Position to Check
+    #-------------------------------------------------------------------------
+    def event_at(x, y)
+      for event in @events.values
+        return event if event.x == x && event.y == y
+      end
+      return nil
+    end
+    #-------------------------------------------------------------------------
+    # * Name      : Character?
+    #   Info      : Is there an character on x and y
+    #   Author    : SephirothSpawn
+    #   Call Info : Two Arguments Integer X, Y - Position to Check
+    #-------------------------------------------------------------------------
+    def character?(x, y)
+      @characters.each_value do |character|
+        return true if character.x == x and character.y == y
+      end
+      return false
+    end
+    #-------------------------------------------------------------------------
+    # * Name      : Character at
+    #   Info      : Returns character at location or nil
+    #   Author    : SephirothSpawn
+    #   Call Info : Two Arguments Integer X, Y - Position to Check
+    #-------------------------------------------------------------------------
+    def character_at(x, y)
+      @characters.each_value do |character|
+        return character if character.x == x and character.y == y
+      end
+      return nil
+    end
+
+
 end
