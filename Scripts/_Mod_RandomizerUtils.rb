@@ -32,7 +32,21 @@ def ObtainSpawnLocations
    $game_map.setup($data_system.start_map_id)
    $game_player.moveto($data_system.start_x, $data_system.start_y)
 end
+#!---------------------------------------------------------#
+#! Get Injection Helper #
+#!---------------------------------------------------------#
 
+def SelectOBJSpawns(arr, quantity, seedindex)
+    seedindex = @Seed[seedindex]
+    @InjectionHelper = []
+    @Side = false
+    for i in 0..(arr.length - 1)
+        @InjectionHelper.push(1) if @Side == false
+        @InjectionHelper.push(0) if @Side == true    
+        @Side = true if i == (arr.length - 1).div(quantity)
+    end
+    @InjectionHelper = get_shuffled_permutation(@InjectionHelper, seedindex)
+end
 
 #!---------------------------------------------------------#
 #! Permutation definition (Thank you RKevin for saving me) #

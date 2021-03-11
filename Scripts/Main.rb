@@ -74,8 +74,4 @@ rescue Errno::ENOENT
   # If unable to open file, display message and end
   filename = $!.message.sub("No such file or directory - ", "")
   print("Unable to find file #{filename}.")
-rescue Exception
-  retry
-rescue => e
-  retry
 end

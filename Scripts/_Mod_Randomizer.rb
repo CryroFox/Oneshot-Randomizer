@@ -52,9 +52,12 @@ class Randomizer
     attr_accessor :PenSpawn             # * Spawn locations for Key items
     attr_accessor :GenSpawn             # * Spawn Locations for Generic Items
     # ? Misc Item Info
+    attr_accessor :InjectionHelper      # * Decides which items are OBJ injected
     attr_accessor :RefugeMapIds         # * List of Refuge Map IDs
     attr_accessor :RefugeBlackList      # * Blacklisted Items
+    attr_accessor :PenIsOBJ             # * Is the pen OBJ injected
     
+
     def initialize
         #* Game Information 
             @Titles = IO.readlines("__Randomizer/splashes.txt")
@@ -66,9 +69,9 @@ class Randomizer
         # * Item Information * #
           # ? Item Information
             @KeyItems        =  [1, 2, 3, 4] # * Item Event ID's
-            @PuzLokItems     =  []           # * Item Event ID's
-            @PuzReqItems     =  []           # * Item Event ID's
-            @GenericItems    =  []           # * Item Event ID's
+            @PuzLokItems     =  [1, 2, 3, 4] # * Item Event ID's
+            @PuzReqItems     =  [1, 2, 3, 4] # * Item Event ID's
+            @GenericItems    =  [1, 2, 3, 4] # * Item Event ID's
             
           # ? Event Locations
             # Key Items    
@@ -89,7 +92,9 @@ class Randomizer
             @PenOBJs         =  []  # * Possible NPC Injection ID's
             @PenSpawns       =  []  # * Possible Spawns
             @PenSpawn        =  []  # * Selected Spawn
+            @PenIsOBJ        =  false
             # ! Refuge Blacklist
+            @InjectionHelper =  []  # * Decides which items are OBJ injected
             @RefugeMapIds    =  []  # * List of Refuge Map IDs
             @RefugeBlackList =  []  # * Blacklisted Items
 
@@ -115,19 +120,77 @@ class Randomizer
 #  * Init
 # //----------------------------------------------------------
     def Init
-        ModWindow.SetTitle("OneShot RNG - Loading Spawn Locations")
-        self.Shuffle_Music
-        self.ObtainSpawnLocations
-        self.Shuffle_KeyItems
-        ModWindow.SetTitle("OneShot RNG - " + $randomizer.Titles.sample)
+     # ? Indicate the game is loading for debug purposes
+       ModWindow.SetTitle("OneShot RNG - Loading Spawn Locations")
+     # ? Reset Item Spawns as to not overlap
+       # Key Items    
+       @KeySpawns       =  []  # * Possible Spawns
+       @KeySpawn        =  []  # * Selected Spawns
+       # Puzzle Items    
+       @PuzLokOBJs      =  []  # * Possible NPC Injection ID's
+       @PuzLokSpawns    =  []  # * Possible Spawns
+       @PuzLokSpawn     =  []  # * Selected Spawns
+       # Puzzle Needed Items    
+       @PuzReqOBJs      =  []  # * Possible NPC Injection ID's
+       @PuzReqSpawns    =  []  # * Item Event ID's
+       @PuzReqSpawn     =  []  # * Item Event ID's
+       # Generic Items    
+       @GenSpawns       =  []  # * Possible Spawns
+       @GenSpawn        =  []  # * Selected Spawns
+       # Anti-softlock Pen
+       @PenOBJs         =  []  # * Possible NPC Injection ID's
+       @PenSpawns       =  []  # * Possible Spawns
+       @PenSpawn        =  []  # * Selected Spawn
+       @PenIsOBJ        =  false
+     # ? Generate Random shit
+       self.Shuffle_Music
+       self.ObtainSpawnLocations
+       self.Shuffle_KeyItems
+       self.Shuffle_GenItems
+       self.Shuffle_PenItems
+       ModWindow.SetTitle("OneShot RNG - " + $randomizer.Titles.sample)
     end
+# //----------------------------------------------------------
+#  > Debug Functions
+# //----------------------------------------------------------
+
+def genOBJ
+    SelectOBJSpawns(@PuzLokSpawns, 1.4, 4)
+    print @InjectionHelper
+end
+
+def PrintItemSpawns
+    print 'Key Items'  
+    print @KeySpawns      
+    print @KeySpawn       
+    print 'Puzzle Items'  
+    print @PuzLokOBJs     
+    print @PuzLokSpawns   
+    print @PuzLokSpawn    
+    print 'Puzzle Needed '
+    print @PuzReqOBJs     
+    print @PuzReqSpawns   
+    print @PuzReqSpawn    
+    print 'Generic Items' 
+    print @GenSpawns      
+    print @GenSpawn       
+    print 'Anti-softlock Pen'
+    print @PenOBJs        
+    print @PenSpawns      
+    print @PenSpawn       
+    print 'Refuge Blacklist'
+    print @InjectionHelper
+    print @RefugeMapIds   
+    print @RefugeBlackList
+end
+
 # //----------------------------------------------------------
 #  * Fun Functions
 # //----------------------------------------------------------
 
-    # // --------------------------
+    # // --------------------------// #
     # ? Set Splash Text
-    # // --------------------------
+    # // --------------------------// #
     def newsplash
         @Titles = IO.readlines("__Randomizer/splashes.txt") if @Titles == []
         @SplashChosen = $randomizer.Titles.last 
@@ -239,9 +302,9 @@ class Randomizer
     def CreateSeed
         if @Seed == [] 
             # * Seed limits tells the game how big each value in your seed can be
-            # * this is done to prevent the game giving values biggen than what are checked for in game 
-            # * (EG: each area only having 4 variations)
-            seedlimits = [4, 4, 4, 4, 62, 10]
+            # * this is done to prevent the game giving values bigger than what are checked for in game 
+            # * (EG: each area only having 4 themings)
+            seedlimits = [4, 4, 4, 4, 80, 40, 40, 40, 40, 40]
             entry = 0 # > The current entry in the seed that's being modified
             until entry >= seedlimits.length
                 @Seed.push(rand(1..seedlimits[entry]))
@@ -250,9 +313,9 @@ class Randomizer
         end
     end
 
-    # // --------------------------
+    # // --------------------------// #
     # ? Shuffle Music List
-    # // --------------------------
+    # // --------------------------// #
     def Shuffle_Music
         @OriginalOST = Dir.glob('Audio/BGM/*.ogg')
         s = factorial(@Seed[4])
@@ -273,10 +336,10 @@ class Randomizer
 # * PuzReq      | Items Required For Puzzles
 # * PuzLok      | Puzzle Locked Items
 # //----------------------------------------------------------
-
-    # // --------------------------
+    
+    # // --------------------------// #
     # ? Shuffle Key Items
-    # // --------------------------
+    # // --------------------------// #
     def Shuffle_KeyItems
         s = factorial(@Seed[5])
         $randomizer.KeySpawn = get_shuffled_permutation($randomizer.KeySpawns, s)
@@ -285,9 +348,35 @@ class Randomizer
         end
     end
 
-    # // --------------------------
+    # // --------------------------// #
+    # ? Shuffle Generic Items
+    # // --------------------------// #
+    def Shuffle_GenItems
+        s = factorial(@Seed[6])
+        $randomizer.GenSpawn = get_shuffled_permutation($randomizer.GenSpawns, s)
+        until $randomizer.GenSpawn.length == (@GenericItems.length - 1) do
+              $randomizer.GenSpawn.pop
+        end
+    end
+
+    # // --------------------------// #
+    # ? Shuffle Pen Spawns
+    # // --------------------------// #
+    def Shuffle_PenItems
+        s = factorial(@Seed[6])
+        $randomizer.PenSpawn = get_shuffled_permutation($randomizer.PenSpawns, s)
+        until $randomizer.PenSpawn.length == 2 do
+              $randomizer.PenSpawn.pop
+        end
+        $randomizer.SelectOBJSpawns($randomizer.PenSpawn, 2, 6)
+        $randomizer.PenSpawn.pop
+        $randomizer.InjectionHelper.pop
+        @PenIsOBJ = true if $randomizer.InjectionHelper[0] == 1
+    end
+
+    # // --------------------------// #
     # ? Spawn Map Items
-    # // --------------------------
+    # // --------------------------// #
     def SpawnItems(type, list)
          #? Reset Variables  
            @Type       = type   # * Type of Item to spawn

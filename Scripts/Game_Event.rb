@@ -33,33 +33,49 @@ class Game_Event < Game_Character
     @starting = false
     @through = true
     @collision = [[0, 0]]
-    # // --------------------------
+    # // -----------------------// #
     # ? - Item Shuffle Spawns - ? #
-    # // --------------------------
+    # // ---------------------// #
     if event.name.start_with?('>>')
+      # * Key Items
       if event.name.end_with?('Key')
         $randomizer.KeySpawns.push([@map_id, @id])
       end
       
+      # * Anti-Softlock Pen
       if event.name.end_with?('Pen')
-        $randomizer.PuzReqSpawns.push([@map_id, @id])
+        $randomizer.PenSpawns.push([@map_id, @id])
       end
-
+      
+      # * Generic Items
       if event.name.end_with?('Gen')
         $randomizer.GenSpawns.push([@map_id, @id])
       end
-
+      
+      # * Puzzle Locked Items
       if event.name.end_with?('PuzLok')
         $randomizer.PuzLokSpawns.push([@map_id, @id])
       end
-
+      
+      # * Puzzle Required Items
       if event.name.end_with?('PuzReq')
         $randomizer.PuzReqSpawns.push([@map_id, @id])
       end
+
+      # * Puzzle Required Items (Obj Injection)
+        if event.name.end_with?('PuzReqObj')
+          $randomizer.PuzReqOBJs.push([@map_id, @id])
+        end
+        
+     # * Puzzle Required Items (Obj Injection)
+       if event.name.end_with?('PuzReqObj')
+         $randomizer.PuzLokOBJs.push([@map_id, @id])
+       end
+
     end
-    # // --------------------------
+    # // --------------------   // #
     # ? ------------------------? #
-    # // --------------------------
+    # // ---------------------// #
     
     # Initialize custom flags
     event.name.scan(/:([a-z]+)/) do |flag, *|
