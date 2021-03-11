@@ -55,11 +55,11 @@ class Randomizer
     attr_accessor :InjectionHelper      # * Decides which items are OBJ injected
     attr_accessor :RefugeMapIds         # * List of Refuge Map IDs
     attr_accessor :RefugeBlackList      # * Blacklisted Items
-    attr_accessor :PenIsOBJ             # * Is the pen OBJ injected
+    #//attr_accessor :PenIsOBJ             # * Is the pen OBJ injected
     
 
     def initialize
-        #* Game Information 
+        #* Game Information  * #
             @Titles = IO.readlines("__Randomizer/splashes.txt")
             @Seed = Array.new
             @SunItems = 0
@@ -92,13 +92,13 @@ class Randomizer
             @PenOBJs         =  []  # * Possible NPC Injection ID's
             @PenSpawns       =  []  # * Possible Spawns
             @PenSpawn        =  []  # * Selected Spawn
-            @PenIsOBJ        =  false
+            #//@PenIsOBJ     =  false
             # ! Refuge Blacklist
             @InjectionHelper =  []  # * Decides which items are OBJ injected
             @RefugeMapIds    =  []  # * List of Refuge Map IDs
             @RefugeBlackList =  []  # * Blacklisted Items
 
-        # * Config Bools and Vars
+        # * Config Bools and Vars * #
             @MessiahName         = ''
             @PlayerSprite        = ''
             @PlayerSunSprite     = ''
@@ -141,13 +141,13 @@ class Randomizer
        @PenOBJs         =  []  # * Possible NPC Injection ID's
        @PenSpawns       =  []  # * Possible Spawns
        @PenSpawn        =  []  # * Selected Spawn
-       @PenIsOBJ        =  false
+       #//@PenIsOBJ     =  false
      # ? Generate Random shit
        self.Shuffle_Music
        self.ObtainSpawnLocations
        self.Shuffle_KeyItems
        self.Shuffle_GenItems
-       self.Shuffle_PenItems
+       self.Shuffle_PenSpawn
        ModWindow.SetTitle("OneShot RNG - " + $randomizer.Titles.sample)
     end
 # //----------------------------------------------------------
@@ -362,16 +362,29 @@ end
     # // --------------------------// #
     # ? Shuffle Pen Spawns
     # // --------------------------// #
-    def Shuffle_PenItems
+    def Shuffle_PenSpawn
         s = factorial(@Seed[6])
-        $randomizer.PenSpawn = get_shuffled_permutation($randomizer.PenSpawns, s)
+        $randomizer.PenSpawn = [get_shuffled_permutation($randomizer.PenSpawns, s), false]
         until $randomizer.PenSpawn.length == 2 do
               $randomizer.PenSpawn.pop
         end
         $randomizer.SelectOBJSpawns($randomizer.PenSpawn, 2, 6)
         $randomizer.PenSpawn.pop
         $randomizer.InjectionHelper.pop
-        @PenIsOBJ = true if $randomizer.InjectionHelper[0] == 1
+        $randomizer.PenSpawn.pop
+        $randomizer.PenSpawn[1] = true if $randomizer.InjectionHelper[0] == 1
+    end
+
+    # // --------------------------// #
+    # ? Shuffle PuzLokItems
+    # // --------------------------// #
+    def Shuffle_GenItems
+        s = factorial(@Seed[7])
+        $randomizer.PuzLokSpawn = get_shuffled_permutation($randomizer.PuzLokSpawns, s)
+        $randomizer.PuzLokOBJs  = get_shuffled_permutation($randomizer.PuzLokOBJs, s)
+        until $randomizer.GenSpawn.length == (@GenericItems.length - 1) do
+              $randomizer.GenSpawn.pop
+        end
     end
 
     # // --------------------------// #
