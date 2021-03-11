@@ -224,7 +224,7 @@ class Game_System
     if @SDKtimer == 400
 
       # * Set The New RP Values
-      @SDKseed = $randomizer.Seed.to_s.gsub!(',', '   ')
+      @SDKseed = $randomizer.Seed.to_s.gsub!(',', '.')
       $discordSDK.LargeImageText   = ('Seed: ' + @SDKseed)
       $discordSDK.Details          = 'Stat Fact: ' + $game_party.steps.to_s + ' Steps taken'
       

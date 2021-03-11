@@ -9,10 +9,12 @@
 # //================================================================================================================#
 
 class Randomizer
+    # ? Main Game Info
     attr_accessor :Titles               # * Splash texts for the game window!
     attr_accessor :Seed                 # * The randomization seed
-    attr_accessor :SunItems             # * How many sun fragments u got
     attr_accessor :InfoGen              # * Disable event processing to obtain all spawn locations
+    attr_accessor :SunItems             # * How many sun fragments u got
+    # ? Config
     attr_accessor :ShuffledOST          # * Shuffled Music List
     attr_accessor :OriginalOST          # * Music List
     attr_accessor :ShuffleMusic         # * Shuffle Music?
@@ -29,20 +31,31 @@ class Randomizer
     attr_accessor :snail                # * Snail Mode :3
     attr_accessor :en                   # * Entity Sprite Toggle
     attr_accessor :af                   # * April Fools Toggle
+    # ? Item Event Lists
     attr_accessor :KeyItems             # * List of Key Items (aka sun, amber etc)
     attr_accessor :PuzLokItems          # * List of Items locked behind Puzzles
+    attr_accessor :PuzReqItems          # * List of Items locked behind Puzzles
     attr_accessor :GenericItems         # * List of generic floor Items
+    # ? Possible Item Spawns
     attr_accessor :KeySpawns            # * Possible Spawn locations for Key items
-    attr_accessor :KeySpawn             # * Spawn locations for Key items
-    attr_accessor :PuzSpawns            # * Possible Spawn Locations for Puzzle Locked Items
-    attr_accessor :PuzSpawn             # * Spawn Locations for Puzzle Locked Items
+    attr_accessor :PuzLokSpawns         # * Possible Spawn Locations for Puzzle Locked Items
+    attr_accessor :PuzReqSpawns         # * Possible Spawn Locations for Items Needed In Puzzles
+    attr_accessor :PenSpawns            # * Possible Spawn Locations for Generic Items
     attr_accessor :GenSpawns            # * Possible Spawn Locations for Generic Items
+    # ? Possible Injection Id's
+    attr_accessor :PuzLokOBJs           # * Event Id's of Events that are allowed to have Item's injected into them
+    attr_accessor :PuzReqOBJs           # * Event Id's of Events that are allowed to have Item's injected into them
+    # ? Chosen Item Spawns
+    attr_accessor :KeySpawn             # * Spawn locations for Key items
+    attr_accessor :PuzLokSpawn          # * Spawn Locations for Puzzle Locked Items
+    attr_accessor :PuzReqSpawn          # * Spawn Locations for Items Needed In Puzzles
+    attr_accessor :PenSpawn             # * Spawn locations for Key items
     attr_accessor :GenSpawn             # * Spawn Locations for Generic Items
-    attr_accessor :spawnevent           # // Spawning Event?
+    # ? Misc Item Info
+    attr_accessor :RefugeMapIds         # * List of Refuge Map IDs
+    attr_accessor :RefugeBlackList      # * Blacklisted Items
     
     def initialize
-        
-        
         #* Game Information 
             @Titles = IO.readlines("__Randomizer/splashes.txt")
             @Seed = Array.new
@@ -51,18 +64,34 @@ class Randomizer
             @InfoGen = false
 
         # * Item Information * #
-            # ? Item Information
+          # ? Item Information
             @KeyItems        =  [1, 2, 3, 4] # * Item Event ID's
-            @PuzLokItems     =  []
-            @GenericItems    =  []
-            # ? Event Locations
-            @KeySpawns       =  []
-            @KeySpawn        =  []
-            @PuzSpawns       =  []
-            @PuzSpawn        =  []
-            @GenSpawns       =  []
-            @GenSpawn        =  []
-
+            @PuzLokItems     =  []           # * Item Event ID's
+            @PuzReqItems     =  []           # * Item Event ID's
+            @GenericItems    =  []           # * Item Event ID's
+            
+          # ? Event Locations
+            # Key Items    
+            @KeySpawns       =  []  # * Possible Spawns
+            @KeySpawn        =  []  # * Selected Spawns
+            # Puzzle Items    
+            @PuzLokOBJs      =  []  # * Possible NPC Injection ID's
+            @PuzLokSpawns    =  []  # * Possible Spawns
+            @PuzLokSpawn     =  []  # * Selected Spawns
+            # Puzzle Needed Items    
+            @PuzReqOBJs      =  []  # * Possible NPC Injection ID's
+            @PuzReqSpawns    =  []  # * Item Event ID's
+            @PuzReqSpawn     =  []  # * Item Event ID's
+            # Generic Items    
+            @GenSpawns       =  []  # * Possible Spawns
+            @GenSpawn        =  []  # * Selected Spawns
+            # Anti-softlock Pen
+            @PenOBJs         =  []  # * Possible NPC Injection ID's
+            @PenSpawns       =  []  # * Possible Spawns
+            @PenSpawn        =  []  # * Selected Spawn
+            # ! Refuge Blacklist
+            @RefugeMapIds    =  []  # * List of Refuge Map IDs
+            @RefugeBlackList =  []  # * Blacklisted Items
 
         # * Config Bools and Vars
             @MessiahName         = ''
@@ -82,30 +111,38 @@ class Randomizer
         
     end
 
-# *----------------------------------------------------------
+# //----------------------------------------------------------
 #  * Init
-# *----------------------------------------------------------
-def Init
-    ModWindow.SetTitle("Oneshot Randomizer - Loading Spawn Locations")
-    self.Shuffle_Music
-    self.ObtainSpawnLocations
-    self.Shuffle_KeyItems
-    ModWindow.SetTitle("Oneshot Randomizer - " + $randomizer.Titles.sample)
-end
-# *----------------------------------------------------------
+# //----------------------------------------------------------
+    def Init
+        ModWindow.SetTitle("OneShot RNG - Loading Spawn Locations")
+        self.Shuffle_Music
+        self.ObtainSpawnLocations
+        self.Shuffle_KeyItems
+        ModWindow.SetTitle("OneShot RNG - " + $randomizer.Titles.sample)
+    end
+# //----------------------------------------------------------
 #  * Fun Functions
-# *----------------------------------------------------------
+# //----------------------------------------------------------
 
-# ? Set Splash Text
-def newsplash
-    ModWindow.SetTitle("Oneshot Randomizer - " + $randomizer.Titles.sample)
-end
+    # // --------------------------
+    # ? Set Splash Text
+    # // --------------------------
+    def newsplash
+        @Titles = IO.readlines("__Randomizer/splashes.txt") if @Titles == []
+        @SplashChosen = $randomizer.Titles.last 
+        @CurrentSplash = "OneShot RNG - #{@SplashChosen}"
+        ModWindow.SetTitle("#{@CurrentSplash}")
+        #ModWindow.SetTitle("OneShot RNG - " + $randomizer.Titles.sample)
+        $randomizer.Titles.pop
+    end
 
-# *----------------------------------------------------------
+
+# //----------------------------------------------------------
 #  * Load the config
-# *----------------------------------------------------------
+# //----------------------------------------------------------
 
-def loadconfig
+    def loadconfig
     File.foreach('__Randomizer/Config.cfg').with_index do |line, line_num|
     if !line.include? "="
         next
@@ -115,7 +152,7 @@ def loadconfig
 
     when "Seed"
         if vals[1] != ''
-        @Seed = vals[1].to_s.split(" ")
+        @Seed = vals[1].to_s.split(".")
         end
     when "ShuffleMusic"
         if vals[1] == 'true'
@@ -193,105 +230,90 @@ def loadconfig
         end
     end
   end
-end
+    end
 
-# *----------------------------------------------------------
+# //----------------------------------------------------------
 #  * Create the new random Seed
-# *----------------------------------------------------------
+# //----------------------------------------------------------
 
-def CreateSeed
-    if @Seed == [] || @Seed != [] 
-        @Seed = []
-        # * Seed limits tells the game how big each value in your seed can be
-        # * this is done to prevent the game giving values biggen than what are checked for in game 
-        # * (EG: each area only having 4 variations)
-        seedlimits = [4, 4, 4, 4, 62, 10]
-        entry = 0 # > The current entry in the seed that's being modified
-        until entry >= seedlimits.length
-            if seedlimits[entry] == 'next6'
-                @Seed[entry..(entry + 6)] = [1, 2, 3, 4, 5, 6].shuffle
-                entry += 6
+    def CreateSeed
+        if @Seed == [] 
+            # * Seed limits tells the game how big each value in your seed can be
+            # * this is done to prevent the game giving values biggen than what are checked for in game 
+            # * (EG: each area only having 4 variations)
+            seedlimits = [4, 4, 4, 4, 62, 10]
+            entry = 0 # > The current entry in the seed that's being modified
+            until entry >= seedlimits.length
+                @Seed.push(rand(1..seedlimits[entry]))
+                entry += 1
             end
-            @Seed.push(rand(1..seedlimits[entry]))
-            entry += 1
-      end
-      #for i in $game_variables[122..(122 + @Seed.length)] do
-      #  $game_variables[122 + i] = @Seed[i]
-      #  print $game_variables[122 + i] = @Seed[i]
-      #end    
-    end
-  end
-
-
-def Shuffle_Music
-    @OriginalOST = Dir.glob('Audio/BGM/*.ogg')
-    s = factorial(@Seed[4])
-    $randomizer.ShuffledOST = get_shuffled_permutation(@OriginalOST, s)
-end
-
-def ObtainSpawnLocations
-    @InfoGen = true
-     @maps = Dir.children('./Data')
-     @maps.delete('Actors.rxdata')
-     @maps.delete('Animations.rxdata')
-     @maps.delete('Armors.rxdata')
-     @maps.delete('Classes.rxdata')
-     @maps.delete('CommonEvents.rxdata')
-     @maps.delete('Enemies.rxdata')
-     @maps.delete('Items.rxdata')
-     @maps.delete('MapInfos.rxdata')
-     @maps.delete('xScripts.rxdata')
-     @maps.delete('Scripts.rxdata')
-     @maps.delete('Skills.rxdata')
-     @maps.delete('States.rxdata')
-     @maps.delete('System.rxdata')
-     @maps.delete('Tilesets.rxdata')
-     @maps.delete('Troops.rxdata')
-     @maps.delete('Weapons.rxdata')
-     @CMID = 0
-        while @maps != []
-            @CMID += 1
-            $game_map.setup(@CMID) 
-            $game_player.moveto(0, 0)
-            @maps.shift
         end
-    @InfoGen = false
-   $game_map.setup($data_system.start_map_id)
-   $game_player.moveto($data_system.start_x, $data_system.start_y)
+    end
 
-end
+    # // --------------------------
+    # ? Shuffle Music List
+    # // --------------------------
+    def Shuffle_Music
+        @OriginalOST = Dir.glob('Audio/BGM/*.ogg')
+        s = factorial(@Seed[4])
+        $randomizer.ShuffledOST = get_shuffled_permutation(@OriginalOST, s)
+    end
 
-def SpawnKeyItems
-  #? Reset Variables  
-  @eventmapid = 0
-  @ITEMEVENT  = 0
-  @evid = 0
-  @ItemsOnMap = []
-    #? Locate and push each Item spawn into a temp array  
-    until @ITEMEVENT == ($randomizer.KeySpawn.length) do
-        @eventmapid = $randomizer.KeySpawn[@ITEMEVENT][0]
-        if @eventmapid == $game_map.map_id 
-            @evid = $randomizer.KeySpawn[@ITEMEVENT][1]
-            @evx  = $game_map.events[@evid].x
-            @evy  = $game_map.events[@evid].y
-            @ItemsOnMap.push([@evid, @ITEMEVENT, @evx, @evy])
+# //----------------------------------------------------------
+#  * Item Methods
+# //----------------------------------------------------------
+# ! Reminder of Array formatting
+#  * Stored items should look like the following ?
+#  * [MAPID, ItemID, X, Y, NPC/OBJ SPAWNED?, EventID]
+#  * [#, #, #, #, True/False, #]
+# //----------------------------------------------------------
+# ! Reminder of Item Types
+# * Key         | Key items like the sun, amber, die, feather
+# * Generic     | Generic No Restriction Items
+# * PuzReq      | Items Required For Puzzles
+# * PuzLok      | Puzzle Locked Items
+# //----------------------------------------------------------
+
+    # // --------------------------
+    # ? Shuffle Key Items
+    # // --------------------------
+    def Shuffle_KeyItems
+        s = factorial(@Seed[5])
+        $randomizer.KeySpawn = get_shuffled_permutation($randomizer.KeySpawns, s)
+        until $randomizer.KeySpawn.length == 4 do
+              $randomizer.KeySpawn.pop
         end
-        @ITEMEVENT += 1
-        return puts 'failed search' if @ITEMEVENT > $randomizer.KeySpawn.length
     end
-    #? Spawn Each Item one by one  
-    until @ItemsOnMap == [] 
-        Event_Spawner.clone_event2(266, $randomizer.KeyItems[@ItemsOnMap.last[1]], @ItemsOnMap.last[2], @ItemsOnMap.last[3], 'KeyItem', end_event = true, save_event = false)
-        @ItemsOnMap.pop
-    end
-end
 
-def Shuffle_KeyItems
-    s = factorial(@Seed[5])
-    $randomizer.KeySpawn = get_shuffled_permutation($randomizer.KeySpawns, s)
-    until $randomizer.KeySpawn.length == 4 do
-    $randomizer.KeySpawn.pop
+    # // --------------------------
+    # ? Spawn Map Items
+    # // --------------------------
+    def SpawnItems(type, list)
+         #? Reset Variables  
+           @Type       = type   # * Type of Item to spawn
+           @List       = list   # * List of the choosen spawns
+           @eventmapid = 0      # * Map ID of the item being read
+           @ITEMEVENT  = 0      # * Current Index of the Item being read
+           @evid       = 0      # * Event ID to write to temp arr
+           @ItemsOnMap = []     # * Arr to hold all items about to be spawned
+         #? Locate and push each Item spawn into a temp array  
+           until @ITEMEVENT == (@List.length) do
+             @eventmapid = @List[@ITEMEVENT][0]
+             if @eventmapid == $game_map.map_id 
+                @evid = @List[@ITEMEVENT][1]
+                @evx  = $game_map.events[@evid].x
+                @evy  = $game_map.events[@evid].y
+                @ItemsOnMap.push([@evid, @ITEMEVENT, @evx, @evy])
+             end
+             @ITEMEVENT += 1
+             return puts 'failed search' if @ITEMEVENT > @List.length
+           end
+         #? Spawn Each Item one by one  
+           until @ItemsOnMap == [] 
+               Event_Spawner.clone_event2(266, @Type[@ItemsOnMap.last[1]], @ItemsOnMap.last[2], @ItemsOnMap.last[3], 'Item', end_event = true, save_event = false)
+               @ItemsOnMap.pop
+           end
     end
-end
+
 
 end

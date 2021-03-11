@@ -33,22 +33,34 @@ class Game_Event < Game_Character
     @starting = false
     @through = true
     @collision = [[0, 0]]
-    # * Item Shuffle Spawns - * #
-     if !$randomizer.spawnevent
-       if event.name.start_with?('>>')
-         if event.name.end_with?('Key')
-         $randomizer.KeySpawns.push([@map_id, @id])
-       end
-       if event.name.end_with?('Puz')
-         $randomizer.PuzSpawns.push([@map_id, @id])
-       end
-       if event.name.end_with?('Gen')
-         $randomizer.GenSpawns.push([@map_id, @id])
-       end
-     end
-    end
-    # * -------------------- * #
+    # // --------------------------
+    # ? - Item Shuffle Spawns - ? #
+    # // --------------------------
+    if event.name.start_with?('>>')
+      if event.name.end_with?('Key')
+        $randomizer.KeySpawns.push([@map_id, @id])
+      end
+      
+      if event.name.end_with?('Pen')
+        $randomizer.PuzReqSpawns.push([@map_id, @id])
+      end
 
+      if event.name.end_with?('Gen')
+        $randomizer.GenSpawns.push([@map_id, @id])
+      end
+
+      if event.name.end_with?('PuzLok')
+        $randomizer.PuzLokSpawns.push([@map_id, @id])
+      end
+
+      if event.name.end_with?('PuzReq')
+        $randomizer.PuzReqSpawns.push([@map_id, @id])
+      end
+    end
+    # // --------------------------
+    # ? ------------------------? #
+    # // --------------------------
+    
     # Initialize custom flags
     event.name.scan(/:([a-z]+)/) do |flag, *|
       @custom_flags << flag.to_sym
