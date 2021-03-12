@@ -221,6 +221,10 @@ class Interpreter
     # Get value to operate
     value = operate_value(@parameters[1], @parameters[2], @parameters[3])
     # Increase / decrease items
+    for i in 0..($randomizer.ItemsOnMap - 1)
+    ###! you were last trying to figure out how to know which eventID you were interacting with here to know which item if any at all to inject, uhhhh you had 2 ideas
+    ###! One was to run a script before the item call to claim which event it is, the other was to take player position and and/remove one on the x/y axis depending on direction and obtain which event it is through that
+    
     $game_party.gain_item(@parameters[0], value)
     
     if @parameters[0] == 1

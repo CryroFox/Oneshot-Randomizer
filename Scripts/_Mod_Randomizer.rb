@@ -55,6 +55,8 @@ class Randomizer
     attr_accessor :InjectionHelper      # * Decides which items are OBJ injected
     attr_accessor :RefugeMapIds         # * List of Refuge Map IDs
     attr_accessor :RefugeBlackList      # * Blacklisted Items
+    attr_accessor :PenID                # * FUCK
+    attr_accessor :ItemsOnMap           # * Items on the current Map
     #//attr_accessor :PenIsOBJ             # * Is the pen OBJ injected
     
 
@@ -69,10 +71,11 @@ class Randomizer
         # * Item Information * #
           # ? Item Information
             @KeyItems        =  [1, 2, 3, 4] # * Item Event ID's
-            @PuzLokItems     =  [1, 2, 3, 4] # * Item Event ID's
-            @PuzReqItems     =  [1, 2, 3, 4] # * Item Event ID's
+            @PuzLokItems     =  [[1], [2], [3], [4]] # * Item Event ID's
+            @PuzReqItems     =  [[1], [2], [3], [4]] # * Item Event ID's
             @GenericItems    =  [1, 2, 3, 4] # * Item Event ID's
-            
+            @PenID           =  [[5]]
+
           # ? Event Locations
             # Key Items    
             @KeySpawns       =  []  # * Possible Spawns
@@ -143,11 +146,11 @@ class Randomizer
        @PenSpawn        =  []  # * Selected Spawn
        #//@PenIsOBJ     =  false
      # ? Generate Random shit
-       self.Shuffle_Music
-       self.ObtainSpawnLocations
-       self.Shuffle_KeyItems
-       self.Shuffle_GenItems
-       self.Shuffle_PenSpawn
+       $randomizer.Shuffle_Music
+       $randomizer.ObtainSpawnLocations
+       $randomizer.Shuffle_KeyItems
+       $randomizer.Shuffle_GenItems
+       $randomizer.Shuffle_PenSpawn
        ModWindow.SetTitle("OneShot RNG - " + $randomizer.Titles.sample)
     end
 # //----------------------------------------------------------
@@ -345,7 +348,7 @@ end
         $randomizer.KeySpawn = get_shuffled_permutation($randomizer.KeySpawns, s)
         until $randomizer.KeySpawn.length == 4 do
               $randomizer.KeySpawn.pop
-        end
+              end
     end
 
     # // --------------------------// #
@@ -356,7 +359,7 @@ end
         $randomizer.GenSpawn = get_shuffled_permutation($randomizer.GenSpawns, s)
         until $randomizer.GenSpawn.length == (@GenericItems.length - 1) do
               $randomizer.GenSpawn.pop
-        end
+              end
     end
 
     # // --------------------------// #
@@ -364,27 +367,25 @@ end
     # // --------------------------// #
     def Shuffle_PenSpawn
         s = factorial(@Seed[6])
-        $randomizer.PenSpawn = [get_shuffled_permutation($randomizer.PenSpawns, s), false]
-        until $randomizer.PenSpawn.length == 2 do
+        $randomizer.PenSpawn = get_shuffled_permutation($randomizer.PenSpawns, s)
+        until $randomizer.PenSpawn.length == 1 do
               $randomizer.PenSpawn.pop
-        end
+              end
         $randomizer.SelectOBJSpawns($randomizer.PenSpawn, 2, 6)
-        $randomizer.PenSpawn.pop
         $randomizer.InjectionHelper.pop
-        $randomizer.PenSpawn.pop
-        $randomizer.PenSpawn[1] = true if $randomizer.InjectionHelper[0] == 1
+        $randomizer.PenSpawn[0][1] = true if $randomizer.InjectionHelper[0] == 1
     end
 
     # // --------------------------// #
     # ? Shuffle PuzLokItems
     # // --------------------------// #
-    def Shuffle_GenItems
+    def Shuffle_PuzLokItems
         s = factorial(@Seed[7])
         $randomizer.PuzLokSpawn = get_shuffled_permutation($randomizer.PuzLokSpawns, s)
         $randomizer.PuzLokOBJs  = get_shuffled_permutation($randomizer.PuzLokOBJs, s)
         until $randomizer.GenSpawn.length == (@GenericItems.length - 1) do
               $randomizer.GenSpawn.pop
-        end
+              end
     end
 
     # // --------------------------// #
@@ -392,29 +393,37 @@ end
     # // --------------------------// #
     def SpawnItems(type, list)
          #? Reset Variables  
-           @Type       = type   # * Type of Item to spawn
-           @List       = list   # * List of the choosen spawns
-           @eventmapid = 0      # * Map ID of the item being read
-           @ITEMEVENT  = 0      # * Current Index of the Item being read
-           @evid       = 0      # * Event ID to write to temp arr
-           @ItemsOnMap = []     # * Arr to hold all items about to be spawned
+            @Type       = type          # * Type of Item to spawn
+            @List       = list          # * List of the choosen spawns
+            @OBJList    = @PenOBJs      # * List Type to Check Injetions
+            @OBJList    = @PuzLokOBJs   # * List Type to Check Injetions
+            @OBJList    = @PuzReqOBJs   # * List Type to Check Injetions
+            @eventmapid = 0             # * Map ID of the item being read
+            @ITEMEVENT  = 0             # * Current Index of the Item being read
+            @evid       = 0             # * Event ID to write to temp arr
+            @ItemsToSpawn = []          # * Arr to hold all items about to be spawned
          #? Locate and push each Item spawn into a temp array  
-           until @ITEMEVENT == (@List.length) do
-             @eventmapid = @List[@ITEMEVENT][0]
-             if @eventmapid == $game_map.map_id 
-                @evid = @List[@ITEMEVENT][1]
-                @evx  = $game_map.events[@evid].x
-                @evy  = $game_map.events[@evid].y
-                @ItemsOnMap.push([@evid, @ITEMEVENT, @evx, @evy])
-             end
-             @ITEMEVENT += 1
-             return puts 'failed search' if @ITEMEVENT > @List.length
-           end
-         #? Spawn Each Item one by one  
-           until @ItemsOnMap == [] 
-               Event_Spawner.clone_event2(266, @Type[@ItemsOnMap.last[1]], @ItemsOnMap.last[2], @ItemsOnMap.last[3], 'Item', end_event = true, save_event = false)
-               @ItemsOnMap.pop
-           end
+            until @ITEMEVENT == (@List.length) do
+              @eventmapid = @List[@ITEMEVENT][0]
+              if @eventmapid == $game_map.map_id 
+                 @evid = @List[@ITEMEVENT][1]
+                 @evx  = $game_map.events[@evid].x
+                 @evy  = $game_map.events[@evid].y
+                 if @Type[@ITEMEVENT].length == 1
+                 @ItemsToSpawn.push([@evid, @ITEMEVENT, @evx, @evy, @Type[@ITEMEVENT][1], @OBJList[@ITEMEVENT[1]]])
+                 else
+                 @ItemsToSpawn.push([@evid, @ITEMEVENT, @evx, @evy])
+                 end
+                 end
+                 @ITEMEVENT += 1
+                 return puts 'failed search' if @ITEMEVENT > @List.length
+                 end
+        #? Spawn Each Item one by one
+                  @ItemsOnMap = @ItemsToSpawn
+            until @ItemsToSpawn == [] 
+                Event_Spawner.clone_event2(266, @Type[@ItemsToSpawn.last[1]], @ItemsToSpawn.last[2], @ItemsToSpawn.last[3], 'Item', end_event = true, save_event = false) unless @ItemsToSpawn.last.length == 5 # ! Should work but is untested
+                @ItemsToSpawn.pop
+                end
     end
 
 

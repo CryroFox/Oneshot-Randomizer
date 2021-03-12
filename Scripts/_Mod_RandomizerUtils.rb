@@ -4,31 +4,31 @@ class Randomizer # ? Utils is just another script to keep the larger techichal c
 # * Lmao
 def ObtainSpawnLocations
     @InfoGen = true
-     @maps = Dir.children('./Data')
-     @maps.delete('Actors.rxdata')
-     @maps.delete('Animations.rxdata')
-     @maps.delete('Armors.rxdata')
-     @maps.delete('Classes.rxdata')
-     @maps.delete('CommonEvents.rxdata')
-     @maps.delete('Enemies.rxdata')
-     @maps.delete('Items.rxdata')
-     @maps.delete('MapInfos.rxdata')
-     @maps.delete('xScripts.rxdata')
-     @maps.delete('Scripts.rxdata')
-     @maps.delete('Skills.rxdata')
-     @maps.delete('States.rxdata')
-     @maps.delete('System.rxdata')
-     @maps.delete('Tilesets.rxdata')
-     @maps.delete('Troops.rxdata')
-     @maps.delete('Weapons.rxdata')
-     @CMID = 0
-        while @maps != []
-            @CMID += 1
-            $game_map.setup(@CMID) 
-            $game_player.moveto(0, 0)
-            @maps.shift
+    @maps = Dir.children('./Data')
+    @maps.delete('CommonEvents.rxdata')
+    @maps.delete('Animations.rxdata')
+    @maps.delete('MapInfos.rxdata')
+    @maps.delete('xScripts.rxdata')
+    @maps.delete('Tilesets.rxdata')
+    @maps.delete('Classes.rxdata')
+    @maps.delete('Enemies.rxdata')
+    @maps.delete('Scripts.rxdata')
+    @maps.delete('Weapons.rxdata')
+    @maps.delete('Actors.rxdata')
+    @maps.delete('Armors.rxdata')
+    @maps.delete('Skills.rxdata')
+    @maps.delete('States.rxdata')
+    @maps.delete('System.rxdata')
+    @maps.delete('Troops.rxdata')
+    @maps.delete('Items.rxdata')
+    @CMID = 0
+    while @maps != []
+        @CMID += 1
+        $game_map.setup(@CMID) 
+        $game_player.moveto(0, 0)
+        @maps.shift
         end
-    @InfoGen = false
+   @InfoGen = false
    $game_map.setup($data_system.start_map_id)
    $game_player.moveto($data_system.start_x, $data_system.start_y)
 end
