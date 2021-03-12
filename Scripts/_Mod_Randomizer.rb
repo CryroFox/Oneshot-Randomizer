@@ -45,6 +45,7 @@ class Randomizer
     # ? Possible Injection Id's
     attr_accessor :PuzLokOBJs           # * Event Id's of Events that are allowed to have Item's injected into them
     attr_accessor :PuzReqOBJs           # * Event Id's of Events that are allowed to have Item's injected into them
+    attr_accessor :PenOBJs              # * Event Id's of Events that are allowed to have Item's injected into them
     # ? Chosen Item Spawns
     attr_accessor :KeySpawn             # * Spawn locations for Key items
     attr_accessor :PuzLokSpawn          # * Spawn Locations for Puzzle Locked Items
@@ -55,8 +56,9 @@ class Randomizer
     attr_accessor :InjectionHelper      # * Decides which items are OBJ injected
     attr_accessor :RefugeMapIds         # * List of Refuge Map IDs
     attr_accessor :RefugeBlackList      # * Blacklisted Items
-    attr_accessor :PenID                # * FUCK
+    attr_accessor :PenID                # * Event id of hte pen since im dumb
     attr_accessor :ItemsOnMap           # * Items on the current Map
+    attr_accessor :RealItemIds          # * A list of each item event in the spawner room that tells Event ID and Name (The name is used to specify the itemid it gives you, that or for other extra processing later)
     #//attr_accessor :PenIsOBJ             # * Is the pen OBJ injected
     
 
@@ -70,12 +72,12 @@ class Randomizer
 
         # * Item Information * #
           # ? Item Information
-            @KeyItems        =  [1, 2, 3, 4] # * Item Event ID's
+            @KeyItems        =  [[1], [2], [3], [4]] # * Item Event ID's
             @PuzLokItems     =  [[1], [2], [3], [4]] # * Item Event ID's
             @PuzReqItems     =  [[1], [2], [3], [4]] # * Item Event ID's
-            @GenericItems    =  [1, 2, 3, 4] # * Item Event ID's
-            @PenID           =  [[5]]
-
+            @GenericItems    =  [[1], [2], [3], [4]]         # * Item Event ID's
+            @PenID           =  [[5]]                # * Event id of hte pen since im dumb
+            @RealItemIds     =  []                   # * List of each item event in the spawner room that tells Event ID and Name (The name is used to specify the itemid it gives you, that or for other extra processing later)
           # ? Event Locations
             # Key Items    
             @KeySpawns       =  []  # * Possible Spawns
@@ -96,8 +98,10 @@ class Randomizer
             @PenSpawns       =  []  # * Possible Spawns
             @PenSpawn        =  []  # * Selected Spawn
             #//@PenIsOBJ     =  false
-            # ! Refuge Blacklist
+            # Injections
             @InjectionHelper =  []  # * Decides which items are OBJ injected
+            @ItemsOnMap      =  []
+            # ! Refuge Blacklist
             @RefugeMapIds    =  []  # * List of Refuge Map IDs
             @RefugeBlackList =  []  # * Blacklisted Items
 
@@ -373,7 +377,7 @@ end
               end
         $randomizer.SelectOBJSpawns($randomizer.PenSpawn, 2, 6)
         $randomizer.InjectionHelper.pop
-        $randomizer.PenSpawn[0][1] = true if $randomizer.InjectionHelper[0] == 1
+        $randomizer.PenSpawn[0][1] = true #if $randomizer.InjectionHelper[0] == 1
     end
 
     # // --------------------------// #
@@ -404,13 +408,13 @@ end
             @ItemsToSpawn = []          # * Arr to hold all items about to be spawned
          #? Locate and push each Item spawn into a temp array  
             until @ITEMEVENT == (@List.length) do
-              @eventmapid = @List[@ITEMEVENT][0]
+              @eventmapid = @List[@ITEMEVENT]
               if @eventmapid == $game_map.map_id 
-                 @evid = @List[@ITEMEVENT][1]
+                 @evid = @List[@ITEMEVENT]
                  @evx  = $game_map.events[@evid].x
                  @evy  = $game_map.events[@evid].y
-                 if @Type[@ITEMEVENT].length == 1
-                 @ItemsToSpawn.push([@evid, @ITEMEVENT, @evx, @evy, @Type[@ITEMEVENT][1], @OBJList[@ITEMEVENT[1]]])
+                 if @List[@ITEMEVENT].length == 1
+                 @ItemsToSpawn.push([@evid, @ITEMEVENT, @evx, @evy, @Type[@ITEMEVENT][1], @OBJList[@ITEMEVENT[1]], @Type[0]])
                  else
                  @ItemsToSpawn.push([@evid, @ITEMEVENT, @evx, @evy])
                  end
@@ -421,7 +425,7 @@ end
         #? Spawn Each Item one by one
                   @ItemsOnMap = @ItemsToSpawn
             until @ItemsToSpawn == [] 
-                Event_Spawner.clone_event2(266, @Type[@ItemsToSpawn.last[1]], @ItemsToSpawn.last[2], @ItemsToSpawn.last[3], 'Item', end_event = true, save_event = false) unless @ItemsToSpawn.last.length == 5 # ! Should work but is untested
+                Event_Spawner.clone_event2(266, @Type[@ItemsToSpawn.last[1]], @ItemsToSpawn.last[2], @ItemsToSpawn.last[3], 'Item', end_event = true, save_event = false) unless @ItemsToSpawn.last.length == 7 # ! Should work but is untested
                 @ItemsToSpawn.pop
                 end
     end
