@@ -96,7 +96,11 @@ class Window_Message < Window_Selectable
     # Pre-process text
     if $game_temp.message_text != nil && !$game_temp.message_text.empty?
       text = $game_temp.message_text
-
+      if $game_temp.message_face != nil
+        if $randomizer.PakUseRobo
+          text = "\[#{text}\]" if $game_temp.message_face.start_with?('niko')
+        end
+      end
       # Determine blip sound
       @blipsound = text.start_with?("[") ? "text_robot" : "text"
 
@@ -105,15 +109,15 @@ class Window_Message < Window_Selectable
         $game_variables[$1.to_i]
       end
 
-  #    if !$randomizer.MessiahName.start_with?("\\") 
-  #      text.gsub!("NIKO", $randomizer.MessiahName.to_s.upcase)
-  #      text.gsub!("niko", $randomizer.MessiahName.to_s.downcase)
-  #      text.gsub!("Niko", $randomizer.MessiahName.to_s)
-  #    else
-  #      text.gsub!("niko", $randomizer.MessiahName.to_s)
-  #      text.gsub!("NIKO", $randomizer.MessiahName.to_s)
-  #      text.gsub!("Niko", $randomizer.MessiahName.to_s)
-  #    end
+      if !$randomizer.MessiahName.start_with?("\\") 
+        text.gsub!("NIKO", $randomizer.MessiahName.to_s.upcase)
+        text.gsub!("niko", $randomizer.MessiahName.to_s.downcase)
+        text.gsub!("Niko", $randomizer.MessiahName.to_s)
+      else
+        text.gsub!("niko", $randomizer.MessiahName.to_s)
+        text.gsub!("NIKO", $randomizer.MessiahName.to_s)
+        text.gsub!("Niko", $randomizer.MessiahName.to_s)
+      end
 
       altcodes = ["╥", "╙", "╘", "╒", "╓", "╫", "╪", "┘", "┌", "█", "▄", "▌", "▐", "▀", "░", "▒", "▓", "δ", "Σ", "σ", "ð", "φ", "⌠", "⌡"]
       charset = Array("A".."Z") + Array("a".."z") + Array(" ") + altcodes

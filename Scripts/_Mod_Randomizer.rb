@@ -19,14 +19,12 @@ class Randomizer
     attr_accessor :OriginalOST          # * Music List
     attr_accessor :ShuffleMusic         # * Shuffle Music?
     attr_accessor :MessiahName          # * The name of the Messiah
-    attr_accessor :PlayerSprite         # * Player Sprite
-    attr_accessor :PlayerGasSprite      # * Player Gasmask Sprite
-    attr_accessor :PlayerNyoomSprite    # * Player On Roomba Sprite
-    attr_accessor :PlayerSunSprite      # * Player Holding Sun Sprite
-    attr_accessor :PlayerLightmap       # * Player Lightmap Sprite
-    attr_accessor :PlayerGasLightmap    # * Player Gasmask Lightmap Sprite
-    attr_accessor :PlayerSunLightmap    # * Player Holding Sun Lightmap Sprite
-    attr_accessor :PlayerNyoomLightmap  # * Player On Roomba Lightmap Sprite
+    attr_accessor :PakUseSprite         # * Does the Pak Use OverWorld Sprites
+    attr_accessor :PakUseLights         # * Does the Pak Use Lightmaps
+    attr_accessor :PakUseFaces          # * Does the Pak Use FaceSprites
+    attr_accessor :PakUseRobo           # * Does the Pak Use Robo text
+    attr_accessor :PakSprt              # * Player Sprite
+    attr_accessor :NikoPak              # * Messiah Pak in use
     attr_accessor :snailP               # * Snail Party
     attr_accessor :snail                # * Snail Mode :3
     attr_accessor :en                   # * Entity Sprite Toggle
@@ -59,10 +57,10 @@ class Randomizer
     attr_accessor :PenID                # * Event id of hte pen since im dumb
     attr_accessor :ItemsOnMap           # * Items on the current Map
     attr_accessor :RealItemIds          # * A list of each item event in the spawner room that tells Event ID and Name (The name is used to specify the itemid it gives you, that or for other extra processing later)
-    #//attr_accessor :PenIsOBJ             # * Is the pen OBJ injected
     
 
     def initialize
+
         #* Game Information  * #
             @Titles = IO.readlines("__Randomizer/splashes.txt")
             @Seed = Array.new
@@ -75,7 +73,7 @@ class Randomizer
             @KeyItems        =  [[1], [2], [3], [4]] # * Item Event ID's
             @PuzLokItems     =  [[1], [2], [3], [4]] # * Item Event ID's
             @PuzReqItems     =  [[1], [2], [3], [4]] # * Item Event ID's
-            @GenericItems    =  [[1], [2], [3], [4]]         # * Item Event ID's
+            @GenericItems    =  [[1], [2], [3], [4]] # * Item Event ID's
             @PenID           =  [[5]]                # * Event id of hte pen since im dumb
             @RealItemIds     =  []                   # * List of each item event in the spawner room that tells Event ID and Name (The name is used to specify the itemid it gives you, that or for other extra processing later)
           # ? Event Locations
@@ -106,21 +104,19 @@ class Randomizer
             @RefugeBlackList =  []  # * Blacklisted Items
 
         # * Config Bools and Vars * #
-            @MessiahName         = ''
-            @PlayerSprite        = ''
-            @PlayerSunSprite     = ''
-            @PlayerGasSprite     = ''
-            @PlayerNyoomSprite   = ''
-            @PlayerLightmap      = ''
-            @PlayerGasLightmap   = ''
-            @PlayerSunLightmap   = ''
-            @PlayerNyoomLightmap = ''
-            @snailP              = false
-            @snail               = false
-            @af                  = false
-            @en                  = false
-            @ShuffleMusic        = false
-        
+            # ? Messiah Pack Vars
+              @PakUseSprite        = false
+              @PakUseLights        = false
+              @PakUseFaces         = false
+              @PakUseRobo          = false
+              @PakSprt             = ''
+            # ? Normal Config Vars
+              @NikoPak             = ''
+              @snailP              = false
+              @snail               = false
+              @af                  = false
+              @en                  = false
+              @ShuffleMusic        = false
     end
 
 # //----------------------------------------------------------
@@ -157,6 +153,7 @@ class Randomizer
        $randomizer.Shuffle_PenSpawn
        ModWindow.SetTitle("OneShot RNG - " + $randomizer.Titles.sample)
     end
+
 # //----------------------------------------------------------
 #  > Debug Functions
 # //----------------------------------------------------------
@@ -167,28 +164,51 @@ def genOBJ
 end
 
 def PrintItemSpawns
-    print 'Key Items'  
+    print 'Key Spawns'  
     print @KeySpawns      
+    print 'Key Spawn'  
     print @KeySpawn       
-    print 'Puzzle Items'  
+    print 'PuzLokOBJs'  
     print @PuzLokOBJs     
+    print 'PuzLokSpawns'  
     print @PuzLokSpawns   
+    print 'PuzLokSpawn'  
     print @PuzLokSpawn    
-    print 'Puzzle Needed '
+    print 'PuzReqOBJs'
     print @PuzReqOBJs     
+    print 'PuzReqSpawns'
     print @PuzReqSpawns   
+    print 'PuzReqSpawn'
     print @PuzReqSpawn    
-    print 'Generic Items' 
+    print 'GenSpawns' 
     print @GenSpawns      
+    print 'GenSpawn' 
     print @GenSpawn       
-    print 'Anti-softlock Pen'
+    print 'PenOBJs'
     print @PenOBJs        
+    print 'PenSpawns'
     print @PenSpawns      
+    print 'PenSpawn'
     print @PenSpawn       
-    print 'Refuge Blacklist'
+    print 'Injection Helper'
     print @InjectionHelper
+    print 'RefugeMapIDs'
     print @RefugeMapIds   
+    print 'RefugeBlackList'
     print @RefugeBlackList
+    print 'KeyItems    '
+    print @KeyItems    
+    print 'PuzLokItems '
+    print @PuzLokItems 
+    print 'PuzReqItems '
+    print @PuzReqItems 
+    print 'GenericItems'
+    print @GenericItems
+    print 'PenID       '
+    print @PenID       
+    print 'RealItemIds '
+    print @RealItemIds 
+    
 end
 
 # //----------------------------------------------------------
@@ -207,7 +227,6 @@ end
         $randomizer.Titles.pop
     end
 
-
 # //----------------------------------------------------------
 #  * Load the config
 # //----------------------------------------------------------
@@ -219,94 +238,52 @@ end
     end
     vals = line.strip.split("=")
     case vals[0]
-
     when "Seed"
-        if vals[1] != ''
-        @Seed = vals[1].to_s.split(".")
-        end
+        @Seed = vals[1].to_s.split(".") if vals[1] != '' && vals[1] != nil
     when "ShuffleMusic"
-        if vals[1] == 'true'
-            @ShuffleMusic = true
-            elsif vals[1] == 'false' || vals[1] == ''
-            @ShuffleMusic = false
-            end  
-    when "Name"
-        if vals[1] != ''
-        @MessiahName = vals[1].to_s
-        end
-
-    when "NormalSprite"
-        if vals[1] != ''
-        @PlayerSprite = vals[1].to_s.downcase
-        end
-
-    when "SunHeldSprite"
-        if vals[1] != ''
-        @PlayerSunSprite = vals[1].to_s.downcase
-        end
-        
-    when "GasmaskSprite"
-        if vals[1] != ''
-        @PlayerGasSprite = vals[1].to_s.downcase
-        end
-
-    when "RoombaSprite"
-        if vals[1] != ''
-        @PlayerNyoomSprite = vals[1].to_s.downcase
-        end
-    
-    when "LightmapSprite"
-        if vals[1] != ''
-        @PlayerLightmap = vals[1].to_s.downcase
-        end
-
-    when "SunHeldLightmapSprite"
-        if vals[1] != ''
-        @PlayerSunLightmap = vals[1].to_s.downcase
-        end
-
-    when "GasmaskLightmap"
-        if vals[1] != ''
-        @PlayerGasLightmap = vals[1].to_s.downcase
-        end
-
-    when "RoombaLightmap"
-        if vals[1] != ''
-        @PlayerNyoomLightmap = vals[1].to_s.downcase
-        end
+        @ShuffleMusic = vals[1] if vals[1] != '' && vals[1] != nil
+    when "MessiahPack"
+        @NikoPak = vals[1] if vals[1] != '' && vals[1] != nil
     when "🐌"
-        if vals[1] == 'true'
-            @snail = true
-            elsif vals[1] == 'false' || vals[1] == ''
-            @snail = false
-            end   
+        @snail = vals[1] if vals[1] != '' && vals[1] != nil
     when "🐌🎉"
-        if vals[1] == 'true'
-            @snailP = true
-            elsif vals[1] == 'false' || vals[1] == ''
-            @snailP = false
-            end   
+        @snailP = vals[1] if vals[1] != '' && vals[1] != nil
     when "af"
-        if vals[1] == 'true'
-        @af = true
-        elsif vals[1] == 'false' || vals[1] == ''
-        @af = false
-        end
+        @af = vals[1] if vals[1] != '' && vals[1] != nil
     when "en"
-        if vals[1] == 'true'
-        @en = true
-        elsif vals[1] == 'false' || vals[1] == ''
-        @en = false
-        end
+        @en = vals[1] if vals[1] != '' && vals[1] != nil
     end
-  end
     end
-
+    end
+    
+    def loadnikopak
+    return if @NikoPak == nil or @NikoPak == ''
+    File.foreach('__Randomizer/MessiahPacks/' + @NikoPak + '/properties.cfg').with_index do |line, line_num|
+    if !line.include? ":"
+        next
+    end
+    vals = line.strip.split(":")
+    case vals[0]
+    when 'Name'
+        @MessiahName = vals[1].downcase if vals[1] != '' && vals[1] != nil
+    when 'OverworldSprites'
+        @PakUseSprite = vals[1] if vals[1] != '' && vals[1] != nil
+    when 'Lightmaps'
+        @PakUseLights = vals[1] if vals[1] != '' && vals[1] != nil
+    when 'FaceSprites?'
+        @PakUseFaces = vals[1]  if vals[1] != '' && vals[1] != nil
+    when 'RobotVoice?'
+        @PakUseRobo = vals[1]   if vals[1] != '' && vals[1] != nil
+    when 'SpriteName'
+        @PakSprt = vals[1]      if vals[1] != '' && vals[1] != nil
+    end
+    end
+    end
 # //----------------------------------------------------------
 #  * Create the new random Seed
 # //----------------------------------------------------------
 
-    def CreateSeed
+    def createseed
         if @Seed == [] 
             # * Seed limits tells the game how big each value in your seed can be
             # * this is done to prevent the game giving values bigger than what are checked for in game 
@@ -377,7 +354,7 @@ end
               end
         $randomizer.SelectOBJSpawns($randomizer.PenSpawn, 2, 6)
         $randomizer.InjectionHelper.pop
-        $randomizer.PenSpawn[0][1] = true #if $randomizer.InjectionHelper[0] == 1
+        $randomizer.PenID.append(true) #if $randomizer.InjectionHelper[0] == 1
     end
 
     # // --------------------------// #
@@ -406,15 +383,15 @@ end
             @ITEMEVENT  = 0             # * Current Index of the Item being read
             @evid       = 0             # * Event ID to write to temp arr
             @ItemsToSpawn = []          # * Arr to hold all items about to be spawned
-         #? Locate and push each Item spawn into a temp array  
+            #? Locate and push each Item spawn into a temp array  
             until @ITEMEVENT == (@List.length) do
-              @eventmapid = @List[@ITEMEVENT]
-              if @eventmapid == $game_map.map_id 
-                 @evid = @List[@ITEMEVENT]
+                @eventmapid = @List[@ITEMEVENT][0]
+                if @eventmapid == $game_map.map_id 
+                 @evid = @List[@ITEMEVENT][1]
                  @evx  = $game_map.events[@evid].x
                  @evy  = $game_map.events[@evid].y
-                 if @List[@ITEMEVENT].length == 1
-                 @ItemsToSpawn.push([@evid, @ITEMEVENT, @evx, @evy, @Type[@ITEMEVENT][1], @OBJList[@ITEMEVENT[1]], @Type[0]])
+                 if @Type[@ITEMEVENT].length == 2
+                 @ItemsToSpawn.push([@evid, @ITEMEVENT, @evx, @evy, @Type[@ITEMEVENT][1], @OBJList[@ITEMEVENT[1]], @Type[0][0]]) # ! I added an extra [0] here, dont forget it 
                  else
                  @ItemsToSpawn.push([@evid, @ITEMEVENT, @evx, @evy])
                  end
@@ -425,10 +402,10 @@ end
         #? Spawn Each Item one by one
                   @ItemsOnMap = @ItemsToSpawn
             until @ItemsToSpawn == [] 
+                print @ItemsToSpawn
                 Event_Spawner.clone_event2(266, @Type[@ItemsToSpawn.last[1]], @ItemsToSpawn.last[2], @ItemsToSpawn.last[3], 'Item', end_event = true, save_event = false) unless @ItemsToSpawn.last.length == 7 # ! Should work but is untested
                 @ItemsToSpawn.pop
                 end
     end
-
 
 end

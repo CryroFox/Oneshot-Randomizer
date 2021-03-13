@@ -43,7 +43,8 @@ class Game_System
   #--------------------------------------------------------------------------
   def bgm_play(bgm)
     @playing_bgm = bgm
-    if $randomizer.ShuffleMusic
+    return Audio.bgm_play("Audio/BGM/" + bgm.name, bgm.volume * 0.8, bgm.pitch) if bgm != nil and bgm.name != "" and defined?($randomizer.OriginalOST) == nil
+    if $randomizer.ShuffleMusic 
       s = $randomizer.OriginalOST.index("Audio/BGM/" + bgm.name + ".ogg")
       song = $randomizer.ShuffledOST[s] unless bgm.name == nil || bgm.name == ""
       if song != nil and song != ""
@@ -224,7 +225,7 @@ class Game_System
     if @SDKtimer == 400
 
       # * Set The New RP Values
-      @SDKseed = $randomizer.Seed.to_s.gsub!(',', '.')
+      @SDKseed = ($randomizer.Seed.to_s.gsub!(',', '.')).gsub(' ', '')
       $discordSDK.LargeImageText   = ('Seed: ' + @SDKseed)
       $discordSDK.Details          = 'Stat Fact: ' + $game_party.steps.to_s + ' Steps taken'
       

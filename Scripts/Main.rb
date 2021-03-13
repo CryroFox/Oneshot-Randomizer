@@ -6,6 +6,7 @@
 
 at_exit do
   Wallpaper.reset
+  
   save unless $game_switches[99] || ($game_system.map_interpreter.running? || !$scene.is_a?(Scene_Map))
 end
 
@@ -20,13 +21,17 @@ def reload_all_scripts
     Kernel::load SCRIPTS_DIR + name + ".rb"
   end
   $randomizer.loadconfig
+  $randomizer.loadnikopak
   $randomizer.newsplash
-  $randomizer.CreateSeed
+  $randomizer.createseed
 end
 
 def load_plugins
   Dir["#{File.dirname(__FILE__)}/__Randomizer/Plugins/*.rb"].each {|file| Kernel::load file }
 end
+
+
+
 
 load_plugins
 reload_all_scripts
@@ -48,8 +53,9 @@ begin
   Oneshot.allow_exit false
   Oneshot.exiting false
   $randomizer.loadconfig
+  $randomizer.loadnikopak
   $randomizer.newsplash
-  $randomizer.CreateSeed
+  $randomizer.createseed
   
   
 

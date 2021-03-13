@@ -66,11 +66,14 @@ class Game_Event < Game_Character
         $randomizer.PuzReqSpawns.push([@map_id, @id])
       end
 
+    end
+    
+    if event.name.start_with?('<<')
       # * Anti-Softlock Pen (Obj Injection)
       if event.name.end_with?('PenObj')
         $randomizer.PenOBJs.push([@map_id, @id])
       end
-
+      
       # * Puzzle Required Items (Obj Injection)
         if event.name.end_with?('PuzReqObj')
           $randomizer.PuzReqOBJs.push([@map_id, @id])

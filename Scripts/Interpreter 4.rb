@@ -220,20 +220,21 @@ class Interpreter
   def command_126
     # Get value to operate
     value = operate_value(@parameters[1], @parameters[2], @parameters[3])
-    for i in 0..($randomizer.ItemsOnMap.length - 1)
-      if i.length == 6 
-        if i[5] == @event_id
-          for f in 0..($randomizer.RealItemIds.length - 1)
-            if f[0] == i[6]
-               $game_party.gain_item(f[1].to_i, value)
-            end
+    for i in 0..($randomizer.ItemsOnMap.length - 1) do
+      if i.length == 6 && i[5] == @event_id
+        for f in 0..($randomizer.RealItemIds.length - 1)
+          if f[0] == i[6]
+            $game_party.gain_item(f[1].to_i, value)
           end
         end
       else
-      # Increase / decrease items
+        # Increase / decrease items
+        $game_party.gain_item(@parameters[0], value)
+      end
+    end 
+    if $randomizer.ItemsOnMap.length == 0
       $game_party.gain_item(@parameters[0], value)
     end
-  end 
     
     if @parameters[0] == 1
       $randomizer.SunItems += 1

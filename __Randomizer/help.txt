@@ -1,0 +1,167 @@
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+    :::     :::::::::  :::::::::   ::::::::  ::::    :::       ::::::::  :::    ::: ::::::::::: :::::::::  :::::::::: 
+  :+: :+:   :+:    :+: :+:    :+: :+:    :+: :+:+:   :+:      :+:    :+: :+:    :+:     :+:     :+:    :+: :+:        
+ +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+ :+:+:+  +:+      +:+        +:+    +:+     +:+     +:+    +:+ +:+        
++#++:++#++: +#+    +:+ +#+    +:+ +#+    +:+ +#+ +:+ +#+      :#:        +#+    +:+     +#+     +#+    +:+ +#++:++#   
++#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+ +#+  +#+#+#      +#+   +#+# +#+    +#+     +#+     +#+    +#+ +#+        
+#+#     #+# #+#    #+# #+#    #+# #+#    #+# #+#   #+#+#      #+#    #+# #+#    #+#     #+#     #+#    #+# #+#        
+###     ### #########  #########   ########  ###    ####       ########   ########  ########### #########  ########## 
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   
+    Welcome to Cryro's shitty Addon-Guide for OSRNG
+    this guide will outline basic examples of how to set up and format addons for OSRNG and will cover the following topics
+
+        >1 - Basic Explanation Of The Folders
+        >2 - Messiah Packs
+        >3 - Music Packs
+        >4 - Npc Packs
+        >5 - .rb Extensions (To Be Written Later)
+
+        ! TIP !
+        To skip to a specific section hit CTRL + F and search > the corresponding number of the chapter above next to it
+        eg: >2
+
+ _____ _____ __    ____  _____ _____ _____ 
+|   __|     |  |  |    \|   __| __  |   __|
+|   __|  |  |  |__|  |  |   __|    -|__   |
+|__|  |_____|_____|____/|_____|__|__|_____|
+──────────────────────────────────────────────────────────────────────────────────────────────────
+
+>1  The naming of folders is often quite an importaning thing in programs, and that is no different here!
+    this little section quickly describes the folder layout and the purpose of a given folder
+
+        .
+        ├── AudioPacks               ----< Holds all your Audio-Packs
+        │   └── AudioPackFolderName   ---< Example name of an AudioPack
+        ├── NPCPacks                 ----< Holds all your NPC-Packs
+        │   └── NPCPackFolderName     ---< Example name of an NPCPack
+        ├── MessiahPacks             ----< Holds all your Messiah-Packs
+        │   └── MessiahPackFolderName ---< Example name of a MessiahPack
+        │       ├── OverWorld          --< Holds all the Overworld sprites
+        │       ├── Lightmaps          --< Holds all the Lightmap sprites
+        │       ├── Faces              --< Holds all the facesprites for the pack
+        │       └── properties.cfg     --< The properties file to configure stuff like name and other such things
+        └── Plugins                  ----< The Plugins folder
+
+
+                                                                            
+ _____ _____ _____ _____ _____ _____ _____    _____ _____ _____ _____ _____ 
+|     |   __|   __|   __|     |  _  |  |  |  |  _  |  _  |     |  |  |   __|
+| | | |   __|__   |__   |-   -|     |     |  |   __|     |   --|    -|__   |
+|_|_|_|_____|_____|_____|_____|__|__|__|__|  |__|  |__|__|_____|__|__|_____|
+──────────────────────────────────────────────────────────────────────────────────────────────────
+
+>2  Messiah Packs are one of the easier to set-up types (besides NPC packs)
+    allowing you to save a different child rather than subjecting Niko over and over (or adult character who knows)
+    If at any point you get confused when setting up a custom pack you can always take a look at the Tori pack as an example
+    (Or you can ask for help in the official Discord if needed)
+
+    ! NOTE !
+    Messiah Packs currently do not support custom tileset/fullCG replacements for now, so fullscreen art and stuff such as sitting for chess/pancakes will not be replaced.
+
+    MPs (Messiah Packs) have 3 parts, the only required parts being one base overworld sprite and the Properties file
+    lets start with the Properties file:
+
+        - PROPERTIES.CFG -
+
+        Name:NameWithoutSpacesHere   ------< The Name displayed in-game instead of Niko (Being left blank displays Niko)
+        OverworldSprites:True/False  -----< Whether or not the pack has Overworld Sprites
+        Lightmaps:True/False         ----< Whether or not the pack has Lightmaps
+        FaceSprites?:True/False      ---< Whether or not the pack has Face Sprites
+        RobotVoice?:True/False       --< Whether or not the game should write the messiah like a robot
+        SpriteName:NameHere          -< What the name of your sprites start with (aka what you replace <SpriteName> with when naming files [See Below] )
+
+
+        - OVERWORLD -
+        
+        The Overworld folder is the place where all of your overworld sprites are kept for the pack to read and use.
+        This guide however, in its current state not go over how to format a spritesheet, however maybe in a future update to it, it might.
+        
+        Adding Sprites to your pack is easy, just make sure they're named correctly and all should be good
+        the list of filenames and what they are, are as follows:
+
+         .
+         ├── <SpriteName>                   --< Default walking sprite
+         ├── <SpriteName>_Sun               --< Sprite for walking when you have the sun
+         ├── <SpriteName>_Gasmask           --< Used when the GasMask is in use and you dont have the sun yet
+         ├── <SpriteName>_GasMask_Sun       --< Used when the GasMask is in use and you have the sun
+         ├── <SpriteName>_Roomba            --< The Roomba sprite in the refuge when you dont have the sun
+         ├── <SpriteName>_Roomba_Sun        --< The Roomba sprite in the refuge when you have the sun
+         ├── <SpriteName>_Red               --< The Weird pinkish red tinted sprite for the refuge interior (no sun version)
+         ├── <SpriteName>_Red_Sun           --< The Weird pinkish red tinted sprite for the refuge interior (sun version)
+         └── <SpriteName>_Finale            --< The Sprite used for the Illuminated Start House in the Ending
+
+        ! Heads Up !
+        when naming your sprite please replace <SpriteName> with what you typed in for the SpriteName
+        EG: SpriteName:Cryro --> Cryro, Cryro_Sun etc...
+
+        - LIGHTMAPS -
+
+        Lightmaps are the same as character sheets, however a lightmap is a 100% black image with the only coloured sections being where the game displays the overlay
+        Typically lightmaps are mostly radial gradients, though solid colours will make up centers of the places they are emitted from.
+
+        Lightmaps share the EXACT SAME filenames as the Overworld Sprites. 
+
+
+        - FACES -
+
+        Faces are simply a same named file as Niko's face-sprites because i'm honestly quite lazy.
+        All you need to worry about in this folder is if the Face is named correctly!
+
+        Filenames are as follows:
+        .
+        ├── niko
+        ├── niko2
+        ├── niko3
+        ├── niko4
+        ├── niko5
+        ├── niko6
+        ├── niko_83c
+        ├── niko_cry
+        ├── niko_distressed
+        ├── niko_distressed2
+        ├── niko_distressed_meow
+        ├── niko_distressed_talk
+        ├── niko_eyeclosed
+        ├── niko_eyeclosed2
+        ├── niko_gasmask
+        ├── niko_huh
+        ├── niko_less_sad
+        ├── niko_pancakes
+        ├── niko_sad
+        ├── niko_shock
+        ├── niko_smile
+        ├── niko_speak
+        ├── niko_surprised
+        ├── niko_upset
+        ├── niko_upset2
+        ├── niko_upset_meow
+        ├── niko_what
+        ├── niko_what2
+        ├── niko_wtf
+        ├── niko_wtf2
+        └── niko_yawn
+
+
+
+
+
+
+
+
+
+
+
+(note for self: you used the rectangles font for miniheaders)
+
+#AudioPacks
+##AudioPackFolderName
+#NPCPacks
+##NPCPackFolderName
+#SpritePacks
+##SpritePackFolderName
+###Faces
+###OverWorld
+###properties.cfg
+#Plugins
+

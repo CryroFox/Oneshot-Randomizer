@@ -1,7 +1,7 @@
 class Randomizer # ? Utils is just another script to keep the larger techichal calls that are used commonly seperate from the main randomizer script
 
-# * Maybe also large junk calls like this one
-# * Lmao
+# > Maybe also large junk calls like this one
+# > Lmao
 def ObtainSpawnLocations
     @InfoGen = true
     @maps = Dir.children('./Data')
